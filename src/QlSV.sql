@@ -1,0 +1,139 @@
+﻿create database QuanLySinhVien
+drop database QuanLySinhVien
+use QuanLySinhVien;
+
+
+drop table lop
+create table Lop(
+	TenLop Nvarchar(25), 
+	Khoa Nvarchar(25),
+	primary key(TenLop)
+)
+
+drop table SinhVien;
+create table SinhVien(
+	Msv Nvarchar(25) not null,
+	HoTen Nvarchar(30) not null,
+	NgaySinh Varchar(15),
+	GioiTinh bit default 1,
+	SDT Varchar(15) not null,
+	DiaChi Nvarchar(15) not null,
+	Email Nvarchar(50) not null,
+	Lop Nvarchar(25) not null,--Kiểu như AT18B--
+	Khoa Nvarchar(15) not null,
+	primary key(Msv)
+
+)
+
+ALTER TABLE SinhVien
+ADD 
+FOREIGN KEY (Lop)
+REFERENCES Lop(TenLop);
+
+drop table GiaoVien
+create table GiaoVien(
+	MaGv Nvarchar(25) not null,
+	HoTen Nvarchar(30) not null,
+	NgaySinh Nvarchar(25) not null,
+	GioiTinh bit default 1,
+	SDT Varchar(15) not null,
+	DiaChi Nvarchar(50) not null,
+	Email Nvarchar(50) not null,
+	TrinhDo nvarchar(30),
+	Luong int,
+	MaMon Nvarchar(25),
+	primary key(MaGv),
+	foreign key (MaMon) references MonHoc(MaMon)
+
+)
+
+
+drop table MonHoc
+Create table MonHoc(
+	MaMon Nvarchar(25) not null,
+	TenMon Nvarchar(25) not null,
+	SoTin int not null,
+	primary key (MaMon),
+
+)
+
+drop table Diem
+create table Diem(
+	Msv Nvarchar(25) not null,
+	MaMon Nvarchar(25) not null,
+	DiemChuyenCan float ,check (DiemChuyenCan <=10 and DiemChuyenCan >= 0),--chuyeen can
+	DiemGk float ,check (DiemGk <=10 and DiemGk >= 0),--giua ki
+	--DiemTong1 float ,check (DiemTong1 <=10 and DiemTong1 >= 0),--Nó là điểm tổng kết trên lớp
+	DiemThi float ,check (DiemThi <=10 and DiemThi >= 0),
+	-- DiemTong2 float ,check (DiemTong2 <=10 and DiemTong2 >= 0),--Nó là điểm tổng kết trên lớp và khi thi
+	Primary key (Msv, MaMon),
+	FOREIGN KEY (Msv) REFERENCES Sinhvien(Msv),
+    FOREIGN KEY (MaMon) REFERENCES Monhoc(MaMon)
+
+)
+ALTER TABLE Diem
+ALTER COLUMN DiemChuyenCan FLOAT NOT NULL;
+ALTER TABLE Diem
+ALTER COLUMN DiemGK FLOAT NOT NULL;
+
+drop table LopTheoMon
+create table LopTheoMon(
+	MaMon Nvarchar(25) not null,
+	Msv Nvarchar(25) not null,
+	FOREIGN KEY (Msv) REFERENCES Sinhvien(Msv),
+    FOREIGN KEY (MaMon) REFERENCES MonHoc(MaMon)
+)
+
+
+
+delete from lop
+-- Insert data into Lop (5 rows)
+INSERT INTO Lop  VALUES
+('AT18P','ATTT'),
+('AT18C','ATTT'),
+('AT18D','ATTT'),
+('AT18E','ATTT'),
+('AT18F','ATTT');
+
+select * from Lop
+
+-- Insert data into SinhVien (5 rows)
+INSERT INTO SinhVien (Msv, HoTen, NgaySinh, SDT, DiaChi, Email, Lop, Khoa) VALUES
+('Msv123', 'John Doe', '16-04-2003', '0123456789', 'Address1', 'john.doe@example.com', 'AT18P', 'ATTT'),
+('Msv124', 'Jane Doe', '16-04-2003', '0123456789', 'Address2', 'jane.doe@example.com', 'AT18C', 'ATTT'),
+('Msv125', 'Alice Smith', '16-04-2003', '0123456789', 'Address3', 'alice.smith@example.com', 'AT18D', 'ATTT'),
+('Msv126', 'Bob Johnson', '16-04-2003', '0123456789', 'Address4', 'bob.johnson@example.com', 'AT18E', 'ATTT'),
+('Msv127', 'Eva Davis', '16-04-2003', '0123456789', 'Address5', 'eva.davis@example.com', 'AT18F', 'ATTT');
+
+-- Insert data into GiaoVien (5 rows)
+INSERT INTO GiaoVien (MaGv, HoTen, NgaySinh, SDT, DiaChi, Email, TrinhDo, Luong, MaMon) VALUES
+('MaGv1', 'Teacher A', '16-04-2003', '0123456789', 'TeacherAddress1', 'teacherA@example.com', 'PhD', 5000,'Mon1'),
+('MaGv2', 'Teacher B', '16-04-2003', '0123456789', 'TeacherAddress2', 'teacherB@example.com', 'Master', 4500,'Mon1'),
+('MaGv3', 'Teacher C', '16-04-2003', '0123456789', 'TeacherAddress3', 'teacherC@example.com', 'Bachelor', 4000,'Mon1'),
+('MaGv4', 'Teacher D', '16-04-2003', '0123456789', 'TeacherAddress4', 'teacherD@example.com', 'PhD', 5000,'Mon1'),
+('MaGv5', 'Teacher E', '16-04-2003', '0123456789', 'TeacherAddress5', 'teacherE@example.com', 'Master', 4500,'Mon1');
+
+-- Insert data into MonHoc (5 rows)
+INSERT INTO MonHoc (MaMon, TenMon, SoTin) VALUES
+('Mon1', 'Math',  3),
+('Mon2', 'Physics', 4),
+('Mon3', 'Chemistry',  3),
+('Mon4', 'Biology',  4), 
+('Mon5', 'History',  3);
+
+-- Insert data into Diem (5 rows)
+INSERT INTO Diem (Msv, MaMon, DiemChuyenCan, DiemGk, DiemThi) VALUES
+('Msv123', 'Mon1', 7.5, 8.0, 9.0),
+('Msv124', 'Mon2', 8.5, 7.0, 8.0),
+('Msv125', 'Mon3', 9.0, 8.5, 7.5),
+('Msv126', 'Mon4', 7.0, 9.0, 8.5),
+('Msv127', 'Mon5', 8.0, 7.5, 9.0);
+update Diem set DiemThi = 8 where Msv = 'Msv125'
+-- Insert data into LopTheoMon (5 rows)
+INSERT INTO LopTheoMon (MaMon, Msv) VALUES
+('Mon1', 'Msv123'),
+('Mon2', 'Msv124'),
+('Mon3', 'Msv125'),
+('Mon4', 'Msv126'),
+('Mon5', 'Msv127');
+
