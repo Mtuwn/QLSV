@@ -23,7 +23,7 @@ public class HandleTeacher {
 
     public void addTeacherDatabase(Teacher x) throws SQLException, ParseException {
 
-        String sql = "INSERT INTO GiaoVien VALUES (?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO GiaoVien VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         int gioiTinh = (x.isGioiTinh().equals("Nam")) ? 1 : 0;
 
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
@@ -40,26 +40,16 @@ public class HandleTeacher {
             preparedStatement.setString(8, x.getTrinhDo());
             preparedStatement.setInt(9, x.getLuong());
             preparedStatement.setString(10, x.getMaMon());
-
-            // Sử dụng executeUpdate cho truy vấn INSERT/UPDATE/DELETE
+             preparedStatement.setString(11, x.getNgaySinh());
             preparedStatement.executeUpdate();
         }
         
-        String sqlLogin = "INSERT INTO loginTeacher VALUES (?,?)";
-        
-
-         try (PreparedStatement preparedStatement = conn.prepareStatement(sqlLogin)) {
-            preparedStatement.setString(1, x.getMaGv());
-            preparedStatement.setString(2, x.getNgaySinh());
        
-
-            preparedStatement.executeUpdate();
-        }
 
     }
 
     public Boolean updateStudentDatabase(Teacher x) throws SQLException {
-        String sql = "update GiaoVien set Hoten=?,NgaySinh=?,GioiTinh=?,SDT=?,DiaChi=?,Email=?,TrinhDo=?,Luong=?,MaMon=? where MaGv = ?";
+        String sql = "update GiaoVien set Hoten=?,NgaySinh=?,GioiTinh=?,SDT=?,DiaChi=?,Email=?,TrinhDo=?,Luong=?,MaMon=?,passwd=? where MaGv = ?";
 
         int gioiTinh = (x.isGioiTinh().equals("Nam")) ? 1 : 0;
 
@@ -77,7 +67,8 @@ public class HandleTeacher {
             preparedStatement.setString(7, x.getTrinhDo());
             preparedStatement.setInt(8, x.getLuong());
             preparedStatement.setString(9, x.getMaMon());
-            preparedStatement.setString(10, x.getMaGv());
+            preparedStatement.setString(10, x.getNgaySinh());
+            preparedStatement.setString(11, x.getMaGv());
             
             
 
@@ -89,12 +80,7 @@ public class HandleTeacher {
 
     public Boolean deleteStudentDatabase(String x) throws SQLException {
         String sql = "delete from GiaoVien where MaGv=?";
-        String sqlLogin = "delete from loginTeacher where username=?";
-        try (PreparedStatement preparedStatement = conn.prepareStatement(sqlLogin)) {
-            preparedStatement.setString(1, x);
-            preparedStatement.executeUpdate();
-        }
-        
+  
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setString(1, x);
       

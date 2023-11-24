@@ -19,7 +19,8 @@ create table SinhVien(
 	Lop Nvarchar(25) not null,--Kiểu như AT18B--
 	primary key(Msv),
 	FOREIGN KEY (Lop)
-    REFERENCES Lop(TenLop)
+    REFERENCES Lop(TenLop),
+	passwd Nvarchar(15)
 )
 go
 Create table MonHoc(
@@ -43,7 +44,8 @@ create table GiaoVien(
 	Luong int,
 	MaMon Nvarchar(25),
 	primary key(MaGv),
-	foreign key (MaMon) references MonHoc(MaMon)
+	foreign key (MaMon) references MonHoc(MaMon),
+	passwd Nvarchar(15)
 
 )
 
@@ -85,12 +87,12 @@ INSERT INTO Lop  VALUES
 
 go
 -- Insert data into SinhVien (5 rows)
-INSERT INTO SinhVien (Msv, HoTen, NgaySinh, SDT, DiaChi, Email, Lop) VALUES
-('Msv123', 'John Doe', '16-04-2003', '0123456789', 'Address1', 'john.doe@example.com', 'AT18P'),
-('Msv124', 'Jane Doe', '16-04-2003', '0123456789', 'Address2', 'jane.doe@example.com', 'AT18C'),
-('Msv125', 'Alice Smith', '16-04-2003', '0123456789', 'Address3', 'alice.smith@example.com', 'AT18D'),
-('Msv126', 'Bob Johnson', '16-04-2003', '0123456789', 'Address4', 'bob.johnson@example.com', 'AT18E'),
-('Msv127', 'Eva Davis', '16-04-2003', '0123456789', 'Address5', 'eva.davis@example.com', 'AT18F');
+INSERT INTO SinhVien (Msv, HoTen, NgaySinh, SDT, DiaChi, Email, Lop,passwd) VALUES
+('Msv123', 'John Doe', '16-04-2003', '0123456789', 'Address1', 'john.doe@example.com', 'AT18P','123456'),
+('Msv124', 'Jane Doe', '16-04-2003', '0123456789', 'Address2', 'jane.doe@example.com', 'AT18C','123456'),
+('Msv125', 'Alice Smith', '16-04-2003', '0123456789', 'Address3', 'alice.smith@example.com', 'AT18D','123456'),
+('Msv126', 'Bob Johnson', '16-04-2003', '0123456789', 'Address4', 'bob.johnson@example.com', 'AT18E','123456'),
+('Msv127', 'Eva Davis', '16-04-2003', '0123456789', 'Address5', 'eva.davis@example.com', 'AT18F','123456');
 go
 
 -- Insert data into MonHoc (5 rows)
@@ -103,12 +105,12 @@ INSERT INTO MonHoc (MaMon, TenMon, SoTin) VALUES
 go
 
 -- Insert data into GiaoVien (5 rows)
-INSERT INTO GiaoVien (MaGv, HoTen, NgaySinh, SDT, DiaChi, Email, TrinhDo, Luong, MaMon) VALUES
-('MaGv1', 'Teacher A', '16-04-2003', '0123456789', 'TeacherAddress1', 'teacherA@example.com', 'PhD', 5000,'Mon1'),
-('MaGv2', 'Teacher B', '16-04-2003', '0123456789', 'TeacherAddress2', 'teacherB@example.com', 'Master', 4500,'Mon1'),
-('MaGv3', 'Teacher C', '16-04-2003', '0123456789', 'TeacherAddress3', 'teacherC@example.com', 'Bachelor', 4000,'Mon1'),
-('MaGv4', 'Teacher D', '16-04-2003', '0123456789', 'TeacherAddress4', 'teacherD@example.com', 'PhD', 5000,'Mon1'),
-('MaGv5', 'Teacher E', '16-04-2003', '0123456789', 'TeacherAddress5', 'teacherE@example.com', 'Master', 4500,'Mon1');
+INSERT INTO GiaoVien (MaGv, HoTen, NgaySinh, SDT, DiaChi, Email, TrinhDo, Luong, MaMon,passwd) VALUES
+('MaGv1', 'Teacher A', '16-04-2003', '0123456789', 'TeacherAddress1', 'teacherA@example.com', 'PhD', 5000,'Mon1','123456'),
+('MaGv2', 'Teacher B', '16-04-2003', '0123456789', 'TeacherAddress2', 'teacherB@example.com', 'Master', 4500,'Mon1','123456'),
+('MaGv3', 'Teacher C', '16-04-2003', '0123456789', 'TeacherAddress3', 'teacherC@example.com', 'Bachelor', 4000,'Mon1','123456'),
+('MaGv4', 'Teacher D', '16-04-2003', '0123456789', 'TeacherAddress4', 'teacherD@example.com', 'PhD', 5000,'Mon1','123456'),
+('MaGv5', 'Teacher E', '16-04-2003', '0123456789', 'TeacherAddress5', 'teacherE@example.com', 'Master', 4500,'Mon1','123456');
 go
 
 -- Insert data into Diem (5 rows)
@@ -135,27 +137,17 @@ INSERT INTO LopTheoMon (MaMon, Msv) VALUES
 
 select * from SinhVien
 
+drop table khaoThi
 create table khaoThi(
 	username Nvarchar(15),
-	password Nvarchar(15),
-	primary key(username)
-)
-
-create table loginStudent(
-	username Nvarchar(15),
-	password Nvarchar(15),
+	passwd Nvarchar(15),
 	primary key(username)
 )
 
 
-create table loginTeacher(
-	username Nvarchar(15),
-	password Nvarchar(15),
-	primary key(username)
-)
+insert into khaoThi values('NTT2003','19052003'),('TMT2003','19052003');
 
-insert into khaoThi values('admin','qaz@123')
+select * from SinhVien
+select * from GiaoVien
 
-select* from loginStudent
-delete  from 
 

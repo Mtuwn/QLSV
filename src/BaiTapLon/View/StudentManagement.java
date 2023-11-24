@@ -70,7 +70,7 @@ public class StudentManagement extends javax.swing.JPanel {
         model.setNumRows(0);
         list.removeAll(list);
 
-        String sql = "	select S.*, L.Khoa from SinhVien as S join Lop L on L.TenLop = S.Lop where L.Khoa = ? and Lop = ? order by Msv";
+        String sql = "select S.Msv, S.HoTen, S.NgaySinh, S.GioiTinh, S.SDT, S.DiaChi, S.Email, S.Lop, L.Khoa from SinhVien as S join Lop L on L.TenLop = S.Lop where L.Khoa = ? and Lop = ? order by Msv";
 
         Connection conn = Connect.getConnection();
 
