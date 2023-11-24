@@ -44,6 +44,17 @@ public class HandleTeacher {
             // Sử dụng executeUpdate cho truy vấn INSERT/UPDATE/DELETE
             preparedStatement.executeUpdate();
         }
+        
+        String sqlLogin = "INSERT INTO loginTeacher VALUES (?,?)";
+        
+
+         try (PreparedStatement preparedStatement = conn.prepareStatement(sqlLogin)) {
+            preparedStatement.setString(1, x.getMaGv());
+            preparedStatement.setString(2, x.getNgaySinh());
+       
+
+            preparedStatement.executeUpdate();
+        }
 
     }
 
@@ -78,12 +89,20 @@ public class HandleTeacher {
 
     public Boolean deleteStudentDatabase(String x) throws SQLException {
         String sql = "delete from GiaoVien where MaGv=?";
+        String sqlLogin = "delete from loginTeacher where username=?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(sqlLogin)) {
+            preparedStatement.setString(1, x);
+            preparedStatement.executeUpdate();
+        }
+        
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setString(1, x);
       
 
             return preparedStatement.executeUpdate() > 0;
         }
+        
+     
 
     }
 }

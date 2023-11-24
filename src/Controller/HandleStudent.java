@@ -26,7 +26,7 @@ public class HandleStudent {
 
     public void addStudentDatabase(Student x) throws SQLException, ParseException {
 
-        String sql = "INSERT INTO SinhVien VALUES (?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO SinhVien VALUES (?,?,?,?,?,?,?,?)";
         int gioiTinh = (x.isGioiTinh().equals("Nam")) ? 1 : 0;
 
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
@@ -41,16 +41,26 @@ public class HandleStudent {
             preparedStatement.setString(6, x.getDiaChi());
             preparedStatement.setString(7, x.getEmail());
             preparedStatement.setString(8, x.getLop());
-            preparedStatement.setString(9, x.getKhoa());
 
-            // Sử dụng executeUpdate cho truy vấn INSERT/UPDATE/DELETE
+            preparedStatement.executeUpdate();
+        }
+        
+        // Lưu thông tin username và password
+        String sqlLogin = "INSERT INTO loginStudent VALUES (?,?)";
+        
+
+         try (PreparedStatement preparedStatement = conn.prepareStatement(sqlLogin)) {
+            preparedStatement.setString(1, x.getMsv());
+            preparedStatement.setString(2, x.getNgaySinh());
+       
+
             preparedStatement.executeUpdate();
         }
 
     }
 
     public Boolean updateStudentDatabase(Student x) throws SQLException {
-        String sql = "update SinhVien set Hoten=?,NgaySinh=?,GioiTinh=?,SDT=?,DiaChi=?,Email=?,Lop=?,Khoa=? where Msv = ?";
+        String sql = "update SinhVien set Hoten=?,NgaySinh=?,GioiTinh=?,SDT=?,DiaChi=?,Email=?,Lop=? where Msv = ?";
         int gioiTinh = (x.isGioiTinh().equals("Nam")) ? 1 : 0;
 
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
@@ -65,8 +75,7 @@ public class HandleStudent {
             preparedStatement.setString(5, x.getDiaChi());
             preparedStatement.setString(6, x.getEmail());
             preparedStatement.setString(7, x.getLop());
-            preparedStatement.setString(8, x.getKhoa());
-            preparedStatement.setString(9, x.getMsv());
+            preparedStatement.setString(8, x.getMsv());
 
             // Sử dụng executeUpdate cho truy vấn INSERT/UPDATE/DELETE
             return preparedStatement.executeUpdate() > 0;
@@ -76,7 +85,11 @@ public class HandleStudent {
 
     public Boolean deleteStudentDatabase(String x) throws SQLException {
         String sql = "delete from Diem where Msv = ?  ;delete from LopTheoMon where Msv = ?  ;delete from SinhVien where Msv = ?  ;";
-     
+        String sqlLogin = "delete from loginStudent where username=?";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(sqlLogin)) {
+            preparedStatement.setString(1, x);
+            preparedStatement.executeUpdate();
+        }
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setString(1, x);
              preparedStatement.setString(2, x);

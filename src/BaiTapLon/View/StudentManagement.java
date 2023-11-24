@@ -37,7 +37,6 @@ public class StudentManagement extends javax.swing.JPanel {
 
     Student x = new Student();
     private static int pos = 0;
-    private boolean flag = true;
     HandleStudent handle = new HandleStudent();
 
     public StudentManagement() throws SQLException {
@@ -71,7 +70,7 @@ public class StudentManagement extends javax.swing.JPanel {
         model.setNumRows(0);
         list.removeAll(list);
 
-        String sql = "	select * from SinhVien where Khoa = ? and Lop = ? order by Msv";
+        String sql = "	select S.*, L.Khoa from SinhVien as S join Lop L on L.TenLop = S.Lop where L.Khoa = ? and Lop = ? order by Msv";
 
         Connection conn = Connect.getConnection();
 
@@ -411,10 +410,10 @@ public class StudentManagement extends javax.swing.JPanel {
 
         if (this.textName.getText().trim().isEmpty() || this.textDate.getText().trim().isEmpty() || this.textAddress.getText().trim().isEmpty() || this.textID.getText().trim().isEmpty()
                 || (!btnFe.isSelected() && !btnMe.isSelected()) || this.textEmail.getText().trim().isEmpty() || this.textSDT.getText().trim().isEmpty()) {
-            flag = false;
+            
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin");
+            return null;
         } else {
-            flag = true;
             tmp.setHoTen(this.textName.getText());
             String dateString = this.textDate.getText().trim();
             String dateRegex = "\\d{2}-\\d{2}-\\d{4}";
@@ -422,14 +421,14 @@ public class StudentManagement extends javax.swing.JPanel {
             Matcher matcher = pattern.matcher(dateString);
             if (!matcher.matches()) {
                 JOptionPane.showMessageDialog(null, "Ngày sinh không hợp lệ\n");
-                flag = false;
+                return null;
             }
             tmp.setNgaySinh(dateString);
             tmp.setDiaChi(this.textAddress.getText());
             tmp.setMsv(this.textID.getText());
             if (!(this.textEmail.getText().contains("@"))) {
                 JOptionPane.showMessageDialog(null, "Email không hợp lệ\n");
-                flag = false;
+                return null;
             }
             tmp.setEmail(this.textEmail.getText());
             if (this.btnMe.isSelected()) {
@@ -441,7 +440,7 @@ public class StudentManagement extends javax.swing.JPanel {
                 tmp.setSDT(this.textSDT.getText());
             } else {
                 JOptionPane.showMessageDialog(null, "SDT không hợp lệ\n");
-                flag = false;
+                return null;
             }
 
             String selectedItem1 = (String) jComboBox1.getSelectedItem();
@@ -466,7 +465,7 @@ public class StudentManagement extends javax.swing.JPanel {
             }
 
         }
-        if (!flag) {
+        if (x == null) {
             return;
         }
 
@@ -490,10 +489,10 @@ public class StudentManagement extends javax.swing.JPanel {
     private void EditObActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditObActionPerformed
         // TODO add your handling code here:
     
-        if (flag) {
+
             Student std = new Student();
             std = inputInf();
-            if (!flag) {
+            if (std == null) {
                 return;
             }
             try {
@@ -512,7 +511,7 @@ public class StudentManagement extends javax.swing.JPanel {
                 Logger.getLogger(StudentManagement.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-        }
+        
 
     }//GEN-LAST:event_EditObActionPerformed
 

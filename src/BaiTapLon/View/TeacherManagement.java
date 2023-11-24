@@ -35,7 +35,6 @@ public class TeacherManagement extends javax.swing.JPanel {
     Teacher x = new Teacher();
     List<Teacher> list = new ArrayList<Teacher>();
     private static int pos = 0;
-    private boolean flag = true;
     HandleTeacher handle = new HandleTeacher();
     public TeacherManagement() throws SQLException {
         initComponents();
@@ -431,10 +430,11 @@ public class TeacherManagement extends javax.swing.JPanel {
         if (this.textName.getText().trim().isEmpty() || this.textDate.getText().trim().isEmpty() || this.textAddress.getText().trim().isEmpty() || this.textID.getText().trim().isEmpty()
                 || (!btnFe.isSelected() && !btnMe.isSelected()) || this.textEmail.getText().trim().isEmpty() || this.textSDT.getText().trim().isEmpty()||this.textDegree.getText().trim().isEmpty()
                 ||this.textSalary.getText().trim().isEmpty()) {
-            flag = false;
+          
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin");
+            return null;
         } else {
-            flag = true;
+            
             tmp.setHoTen(this.textName.getText());
             String dateString = this.textDate.getText().trim();
             String dateRegex = "\\d{2}-\\d{2}-\\d{4}";
@@ -442,14 +442,14 @@ public class TeacherManagement extends javax.swing.JPanel {
             Matcher matcher = pattern.matcher(dateString);
             if (!matcher.matches()) {
                 JOptionPane.showMessageDialog(null, "Ngày sinh không hợp lệ\n");
-                flag = false;
+                return null;
             }
             tmp.setNgaySinh(dateString);
             tmp.setDiaChi(this.textAddress.getText());
             tmp.setMaGv(this.textID.getText());
             if (!(this.textEmail.getText().contains("@"))) {
                 JOptionPane.showMessageDialog(null, "Email không hợp lệ\n");
-                flag = false;
+                return null;
             }
             tmp.setEmail(this.textEmail.getText());
             if (this.btnMe.isSelected()) {
@@ -461,15 +461,16 @@ public class TeacherManagement extends javax.swing.JPanel {
                 tmp.setSDT(this.textSDT.getText());
             } else {
                 JOptionPane.showMessageDialog(null, "SDT không hợp lệ\n");
-                flag = false;
+                return null;
             }
             
             if (this.textSalary.getText().trim().matches("\\d+") ) {
-                tmp.setSDT(this.textSDT.getText());
+                tmp.setLuong(Integer.parseInt(this.textSalary.getText()));
             } else {
                 JOptionPane.showMessageDialog(null, "Không hợp lệ\n");
-                flag = false;
+                return null;
             }
+            tmp.setTrinhDo(this.textDegree.getText());
 
         }
 
@@ -495,10 +496,10 @@ public class TeacherManagement extends javax.swing.JPanel {
 
     private void EditObActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditObActionPerformed
         // TODO add your handling code here:
-          if (flag) {
+          
             Teacher std = new Teacher();
             std = inputInf();
-            if (!flag) {
+            if (std == null) {
                 return;
             }
             try {
@@ -510,7 +511,7 @@ public class TeacherManagement extends javax.swing.JPanel {
             }
 
           
-          }
+          
         try {
             viewTable();
         } catch (SQLException ex) {
@@ -522,6 +523,9 @@ public class TeacherManagement extends javax.swing.JPanel {
         // TODO add your handling code here:
           // TODO add your handling code here:
         x = inputInf();
+        if (x == null) {
+            return;
+        }
 
         for (Teacher tmp : list) {
             if (tmp.getMaGv().equalsIgnoreCase(x.getMaGv())) {
@@ -530,10 +534,7 @@ public class TeacherManagement extends javax.swing.JPanel {
             }
 
         }
-        if (!flag) {
-            return;
-        }
-
+        
         try {
             handle.addTeacherDatabase(x);
         } catch (SQLException ex) {

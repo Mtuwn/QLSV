@@ -30,6 +30,9 @@ public class HandleClass {
             preparedStatement.setString(1, x.getLop());
             preparedStatement.setString(2, x.getKhoa()); 
             preparedStatement.executeUpdate();
+
+        } catch(SQLException e){
+            JOptionPane.showMessageDialog(null, "Thêm không thành công");
         }
     }
 
