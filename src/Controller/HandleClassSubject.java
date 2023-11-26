@@ -22,6 +22,7 @@ public class HandleClassSubject {
     }
 
     Connection conn = Connect.getConnection();
+    
 
     public Boolean addClassDatabase(String TenMon, String Msv) throws SQLException, ParseException {
 

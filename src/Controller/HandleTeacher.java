@@ -21,7 +21,7 @@ public class HandleTeacher {
     }
     Connection conn = Connect.getConnection();
 
-    public void addTeacherDatabase(Teacher x) throws SQLException, ParseException {
+    public boolean addTeacherDatabase(Teacher x) throws SQLException, ParseException {
 
         String sql = "INSERT INTO GiaoVien VALUES (?,?,?,?,?,?,?,?,?,?,?)";
         int gioiTinh = (x.isGioiTinh().equals("Nam")) ? 1 : 0;
@@ -41,7 +41,7 @@ public class HandleTeacher {
             preparedStatement.setInt(9, x.getLuong());
             preparedStatement.setString(10, x.getMaMon());
              preparedStatement.setString(11, x.getNgaySinh());
-            preparedStatement.executeUpdate();
+             return preparedStatement.executeUpdate() > 0;
         }
         
        

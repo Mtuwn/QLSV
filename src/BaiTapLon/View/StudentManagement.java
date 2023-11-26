@@ -34,15 +34,59 @@ public class StudentManagement extends javax.swing.JPanel {
      * Creates new form AddStudent
      */
     List<Student> list = new ArrayList<Student>();
-
     Student x = new Student();
     private static int pos = 0;
+    private boolean add = true;
+    private boolean edit = false;
+    private boolean delete = false;
     HandleStudent handle = new HandleStudent();
 
     public StudentManagement() throws SQLException {
         initComponents();
-        viewTable("ATTT", "AT18B");
+        
+        textID.setVisible(false);
+            labelMsv.setVisible(false);
+            viewTable("ATTT", "AT18B");
         showCombobox("ATTT");
+
+    }
+
+    private String handleMsv() {
+        String Khoa = (String) jComboBox1.getSelectedItem();
+        String Lop = (String) jComboBox3.getSelectedItem();
+        String sql = "select Top 1 S.Msv from SinhVien as S join Lop L on L.TenLop = S.Lop where L.Khoa = ? and Lop = ? order by Msv desc";
+        Connection conn = Connect.getConnection();
+        String MsvCu = "";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+            preparedStatement.setString(1, Khoa);
+            preparedStatement.setString(2, Lop);
+
+            // Execute the query and process the results
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                MsvCu = rs.getString(1);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        String newMsv = "";
+        if (MsvCu.trim().isEmpty()) {
+            String regex = "[A-Z]{2}\\d{6}";
+            newMsv = this.textID.getText().trim();
+            if(!newMsv.matches(regex)){
+                JOptionPane.showMessageDialog(null, "Mã không đúng định dạng!!!\nĐịnh dạng đúng [A-Z]{2}\\d{6}");
+                return null;
+            }
+        } else {
+            String head = MsvCu.substring(0, 5);
+            int last = Integer.parseInt(MsvCu.substring(5, 8));
+            last++;
+            newMsv = head + last;
+
+        }
+        return newMsv;
+
 
     }
 
@@ -53,7 +97,6 @@ public class StudentManagement extends javax.swing.JPanel {
         String dateString = x.getNgaySinh();
         this.textDate.setText(dateString);
         this.textAddress.setText(x.getDiaChi());
-        this.textID.setText(x.getMsv());
         this.textEmail.setText(x.getEmail());
         if (x.isGioiTinh() == "Nam") {
             this.btnMe.setSelected(true);
@@ -61,6 +104,8 @@ public class StudentManagement extends javax.swing.JPanel {
             this.btnFe.setSelected(true);
         }
         this.textSDT.setText(x.getSDT());
+        this.textID.setText(x.getMsv());
+
 //        
 //       
     }
@@ -95,7 +140,14 @@ public class StudentManagement extends javax.swing.JPanel {
         for (Student x : list) {
             model.addRow(new Object[]{x.getMsv(), x.getHoTen(), x.isGioiTinh(), x.getEmail()});
         }
-
+        if ((this.Table1.getRowCount() == 0)) {
+                textID.setVisible(true);
+                labelMsv.setVisible(true);
+            } else if((this.Table1.getRowCount() == 0) && !edit &&delete){
+                 textID.setVisible(false);
+                labelMsv.setVisible(false);
+            }
+       
     }
 
     /**
@@ -113,7 +165,7 @@ public class StudentManagement extends javax.swing.JPanel {
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
-        jLabel22 = new javax.swing.JLabel();
+        labelMsv = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
         textName = new javax.swing.JTextField();
@@ -132,6 +184,8 @@ public class StudentManagement extends javax.swing.JPanel {
         DeleteOb = new javax.swing.JButton();
         EditOb = new javax.swing.JButton();
         addOb = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        headerLabel = new javax.swing.JLabel();
 
         jLabel18.setText("Họ Tên:");
 
@@ -139,7 +193,7 @@ public class StudentManagement extends javax.swing.JPanel {
 
         jLabel21.setText("Địa chỉ:");
 
-        jLabel22.setText("Mã sinh viên:");
+        labelMsv.setText("Mã sinh viên:");
 
         jLabel23.setText("Email:");
 
@@ -232,12 +286,14 @@ public class StudentManagement extends javax.swing.JPanel {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel18)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(124, 124, 124)
+                        .addGap(130, 130, 130)
                         .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(labelMsv, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(textID, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -245,77 +301,78 @@ public class StudentManagement extends javax.swing.JPanel {
                                 .addComponent(jLabel19)
                                 .addComponent(jLabel24)
                                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                    .addGap(6, 6, 6)
-                                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel21)
-                                            .addComponent(jLabel22))
-                                        .addComponent(jComboBox1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addGap(19, 19, 19)
+                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addComponent(jLabel20)
-                            .addComponent(jLabel26))
-                        .addGap(11, 11, 11)
+                            .addComponent(jLabel26)
+                            .addComponent(jLabel21)
+                            .addComponent(jLabel18))
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(textSDT, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textID, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textName, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textDate, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(btnMe)
-                                .addGap(18, 18, 18)
-                                .addComponent(btnFe)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 34, Short.MAX_VALUE)
+                                .addGap(11, 11, 11)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(textSDT, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(textEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(textAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(textDate, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(btnMe)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(btnFe))))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addComponent(textName, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 675, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(16, 16, 16))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(30, Short.MAX_VALUE))
+                        .addGap(0, 14, Short.MAX_VALUE)
+                        .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(77, 77, 77)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGap(35, 35, 35)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(labelMsv)
+                            .addComponent(textID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(36, 36, 36)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel18)
                             .addComponent(textName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(36, 36, 36)
+                        .addGap(4, 4, 4)
                         .addComponent(jLabel19)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(30, 30, 30)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGap(5, 5, 5)
+                                .addComponent(jLabel20)
+                                .addGap(32, 32, 32)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel21)
+                                    .addComponent(textDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(textAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(30, 30, 30)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel20)
-                            .addComponent(textDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel23)
+                            .addComponent(textEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(35, 35, 35)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel24)
+                            .addComponent(btnMe)
+                            .addComponent(btnFe))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(textAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel21))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel23)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(textID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel22))
-                                .addGap(33, 33, 33)
-                                .addComponent(textEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel24)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(btnMe)
-                                .addComponent(btnFe)))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(textSDT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel26))
-                        .addGap(22, 22, 22))))
+                            .addComponent(jLabel26)
+                            .addComponent(textSDT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(30, 30, 30)))
+                .addGap(22, 22, 22))
         );
 
         DeleteOb.setText("Xóa");
@@ -339,29 +396,60 @@ public class StudentManagement extends javax.swing.JPanel {
             }
         });
 
+        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
+
+        headerLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        headerLabel.setText("Thêm sinh viên");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(414, 414, 414)
+                .addComponent(headerLabel)
+                .addContainerGap(425, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addComponent(headerLabel)
+                .addContainerGap(28, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(18, 18, 18)
-                .addComponent(addOb)
-                .addGap(42, 42, 42)
-                .addComponent(EditOb)
-                .addGap(44, 44, 44)
-                .addComponent(DeleteOb)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(addOb)
+                        .addGap(54, 54, 54)
+                        .addComponent(EditOb)
+                        .addGap(66, 66, 66)
+                        .addComponent(DeleteOb)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(addOb)
-                    .addComponent(EditOb)
-                    .addComponent(DeleteOb))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(EditOb)
+                        .addComponent(DeleteOb))
+                    .addComponent(addOb))
                 .addGap(49, 49, 49))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -381,10 +469,6 @@ public class StudentManagement extends javax.swing.JPanel {
     private void textEmailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textEmailActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textEmailActionPerformed
-
-    private void textIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textIDActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textIDActionPerformed
 
     private void btnMeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMeActionPerformed
         // TODO add your handling code here:
@@ -408,19 +492,20 @@ public class StudentManagement extends javax.swing.JPanel {
     private Student inputInf() {
         Student tmp = new Student();
 
-        if (this.textName.getText().trim().isEmpty() || this.textDate.getText().trim().isEmpty() || this.textAddress.getText().trim().isEmpty() || this.textID.getText().trim().isEmpty()
+        if (this.textName.getText().trim().isEmpty() || this.textDate.getText().trim().isEmpty() || this.textAddress.getText().trim().isEmpty()
                 || (!btnFe.isSelected() && !btnMe.isSelected()) || this.textEmail.getText().trim().isEmpty() || this.textSDT.getText().trim().isEmpty()) {
-            
+
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin");
             return null;
         } else {
             tmp.setHoTen(this.textName.getText());
             String dateString = this.textDate.getText().trim();
-            String dateRegex = "\\d{2}-\\d{2}-\\d{4}";
+            String dateRegex = "\\d{2}/\\d{2}/\\d{4}";
             Pattern pattern = Pattern.compile(dateRegex);
             Matcher matcher = pattern.matcher(dateString);
             if (!matcher.matches()) {
-                JOptionPane.showMessageDialog(null, "Ngày sinh không hợp lệ\n");
+                JOptionPane.showMessageDialog(null, "Ngày sinh không hợp lệ\n"
+                        + "(dd/mm/yyyy)");
                 return null;
             }
             tmp.setNgaySinh(dateString);
@@ -436,7 +521,7 @@ public class StudentManagement extends javax.swing.JPanel {
             } else if (this.btnFe.isSelected()) {
                 tmp.setGioiTinh(false);
             }
-            if (this.textSDT.getText().trim().matches("\\d+") && this.textSDT.getText().trim().length() == 10 || this.textSDT.getText().trim().length() == 11) {
+            if (this.textSDT.getText().trim().matches("0[0-9]{9,10}")) {
                 tmp.setSDT(this.textSDT.getText());
             } else {
                 JOptionPane.showMessageDialog(null, "SDT không hợp lệ\n");
@@ -456,48 +541,73 @@ public class StudentManagement extends javax.swing.JPanel {
 
     private void addObActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addObActionPerformed
         // TODO add your handling code here:
-        x = inputInf();
 
-        for (Student tmp : list) {
-            if (tmp.getMsv().equalsIgnoreCase(x.getMsv())) {
-                JOptionPane.showMessageDialog(null, "Mã sinh viên đã tồn tại");
+        if (!add) {
+            JOptionPane.showMessageDialog(null, "Bạn đang chuyển sang chế độ thêm sinh viên!!!");
+            add = true;
+            delete = false;
+            edit = false;
+            if (this.Table1.getRowCount() == 0) {
+                textID.setVisible(true);
+                labelMsv.setVisible(true);
+            } else {
+                 textID.setVisible(false);
+                labelMsv.setVisible(false);
+            }
+
+            headerLabel.setText("Thêm sinh viên");
+        } else {
+             x = inputInf();
+            if (x == null) {
                 return;
             }
 
-        }
-        if (x == null) {
-            return;
-        }
+            x.setMsv(handleMsv());
+            if(x.getMsv().trim().isEmpty()) return;
+            try {
+                if( handle.addStudentDatabase(x))
+                    JOptionPane.showMessageDialog(null, "Thêm thành công!!!");
+                else{
+                    JOptionPane.showMessageDialog(null, "Sinh viên đã tồn tại!!!");
+                    return;
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(StudentManagement.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                Logger.getLogger(StudentManagement.class.getName()).log(Level.SEVERE, null, ex);
+            }
 
-        try {
-            handle.addStudentDatabase(x);
-        } catch (SQLException ex) {
-            Logger.getLogger(StudentManagement.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(StudentManagement.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        String selectedItem1 = (String) jComboBox1.getSelectedItem();
-        String selectedItem3 = (String) jComboBox3.getSelectedItem();
-        try {
-            viewTable(selectedItem1, selectedItem3);
-        } catch (SQLException ex) {
-            Logger.getLogger(StudentManagement.class.getName()).log(Level.SEVERE, null, ex);
+            String selectedItem1 = (String) jComboBox1.getSelectedItem();
+            String selectedItem3 = (String) jComboBox3.getSelectedItem();
+            try {
+                viewTable(selectedItem1, selectedItem3);
+            } catch (SQLException ex) {
+                Logger.getLogger(StudentManagement.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_addObActionPerformed
 
     private void EditObActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditObActionPerformed
         // TODO add your handling code here:
-    
-
+        if (!edit) {
+            JOptionPane.showMessageDialog(null, "Bạn đang chuyển sang chế độ sửa sinh viên!!!");
+            edit = true;
+            add = false;
+            delete = false;
+            textID.setVisible(true);
+            labelMsv.setVisible(true);
+            headerLabel.setText("Xóa sinh viên");
+        } else {
             Student std = new Student();
             std = inputInf();
             if (std == null) {
                 return;
             }
             try {
-                if(!handle.updateStudentDatabase(std)){
+                if (!handle.updateStudentDatabase(std)) {
                     JOptionPane.showMessageDialog(null, "Không tìm thấy sinh viên");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Sửa thành công");
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(StudentManagement.class.getName()).log(Level.SEVERE, null, ex);
@@ -511,26 +621,45 @@ public class StudentManagement extends javax.swing.JPanel {
                 Logger.getLogger(StudentManagement.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-        
+        }
 
     }//GEN-LAST:event_EditObActionPerformed
 
     private void DeleteObActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteObActionPerformed
-        
-        String x= this.textID.getText();
-       HandleStudent handle = new HandleStudent();
-        try {
-            handle.deleteStudentDatabase(x);
-        } catch (SQLException ex) {
-            Logger.getLogger(StudentManagement.class.getName()).log(Level.SEVERE, null, ex);
+
+        if (!delete) {
+            JOptionPane.showMessageDialog(null, "Bạn đang chuyển sang chế độ xóa sinh viên!!!");
+            delete = true;
+            add = false;
+            edit = false;
+            textID.setVisible(true);
+            labelMsv.setVisible(true);
+            headerLabel.setText("Xóa sinh viên");
+        } else {
+
+            String x = this.textID.getText();
+            HandleStudent handle = new HandleStudent();
+            try {
+                if(!handle.deleteStudentDatabase(x)){
+                    JOptionPane.showMessageDialog(null, "Không tìm thấy sinh viên");
+                } else {
+                   JOptionPane.showMessageDialog(null, "Xóa thành công");
+                }
+                
+            } catch (SQLException ex) {
+                Logger.getLogger(StudentManagement.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            String selectedItem1 = (String) jComboBox1.getSelectedItem();
+            String selectedItem2 = (String) jComboBox3.getSelectedItem();
+            try {
+                viewTable(selectedItem1, selectedItem2);
+            } catch (SQLException ex) {
+                Logger.getLogger(StudentManagement.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
-        String selectedItem1 = (String) jComboBox1.getSelectedItem();
-        String selectedItem2 = (String) jComboBox3.getSelectedItem();
-        try {
-            viewTable(selectedItem1, selectedItem2);
-        } catch (SQLException ex) {
-            Logger.getLogger(StudentManagement.class.getName()).log(Level.SEVERE, null, ex);
-        }
+
+
     }//GEN-LAST:event_DeleteObActionPerformed
 
     private void showCombobox(String selectedItem) {
@@ -583,6 +712,10 @@ public class StudentManagement extends javax.swing.JPanel {
         // TODO add your handling code here:
     }//GEN-LAST:event_textSDTActionPerformed
 
+    private void textIDActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textIDActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textIDActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton DeleteOb;
@@ -592,18 +725,20 @@ public class StudentManagement extends javax.swing.JPanel {
     private javax.swing.JRadioButton btnFe;
     private javax.swing.JRadioButton btnMe;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JLabel headerLabel;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JComboBox<String> jComboBox3;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel26;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JLabel labelMsv;
     private javax.swing.JTextField textAddress;
     private javax.swing.JTextField textDate;
     private javax.swing.JTextField textEmail;

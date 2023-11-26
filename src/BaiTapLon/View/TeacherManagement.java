@@ -31,17 +31,56 @@ public class TeacherManagement extends javax.swing.JPanel {
     /**
      * Creates new form AddTeacher
      */
-    
     Teacher x = new Teacher();
     List<Teacher> list = new ArrayList<Teacher>();
     private static int pos = 0;
+    private boolean add = true;
+    private boolean edit = false;
+    private boolean delete = false;
     HandleTeacher handle = new HandleTeacher();
+
     public TeacherManagement() throws SQLException {
         initComponents();
+        textID.setVisible(false);
+        labelMa.setVisible(false);
         viewTable();
     }
-    
-     private void view() throws SQLException {
+
+    private String handleMgv() {
+        String sql = "select Top 1 MaGV from GiaoVien order by MaGv desc";
+        Connection conn = Connect.getConnection();
+        String maGvCu = "";
+        try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
+
+            // Execute the query and process the results
+            ResultSet rs = preparedStatement.executeQuery();
+            while (rs.next()) {
+                maGvCu = rs.getString(1);
+
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        String newMaGv = "";
+        if (maGvCu.trim().isEmpty()) {
+            String regex = "GV\\d{4}";
+            newMaGv = this.textID.getText().trim();
+            if (!newMaGv.matches(regex)) {
+                JOptionPane.showMessageDialog(null, "Mã không đúng định dạng!!!\nĐịnh dạng đúng GV\\d{4}");
+                return null;
+            }
+        } else {
+            String head = maGvCu.substring(0, 2);
+            int last = Integer.parseInt(maGvCu.substring(2, 6));
+            last++;
+            newMaGv = head + last;
+
+        }
+        return newMaGv;
+
+    }
+
+    private void view() throws SQLException {
 
         x = list.get(pos);
         this.textName.setText(x.getHoTen());
@@ -56,12 +95,13 @@ public class TeacherManagement extends javax.swing.JPanel {
             this.btnFe.setSelected(true);
         }
         this.textSDT.setText(x.getSDT());
-        this.textDegree.setText(x.getTrinhDo());
+        String degree = (String) jComboBox1.getSelectedItem();
+        jComboBox1.setSelectedItem(x.getTrinhDo().trim());
         this.textSalary.setText(Integer.toString(x.getLuong()));
 //       
     }
-    
-     public void viewTable() throws SQLException {
+
+    public void viewTable() throws SQLException {
         DefaultTableModel model = (DefaultTableModel) this.Table1.getModel();
         model.setNumRows(0);
         list.removeAll(list);
@@ -78,7 +118,7 @@ public class TeacherManagement extends javax.swing.JPanel {
                 // Process the result set as needed
                 Boolean gender = Integer.parseInt(rs.getString(4)) == 1 ? true : false;
                 String gioiTinh = Integer.parseInt(rs.getString(4)) == 1 ? "Nam" : "Nữ";
-                x = new Teacher(rs.getString(1), rs.getString(2), rs.getString(3), gender, rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getInt(9),rs.getString(10));
+                x = new Teacher(rs.getString(1), rs.getString(2), rs.getString(3), gender, rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getInt(9), rs.getString(10));
                 list.add(x);
             }
         } catch (SQLException e) {
@@ -87,6 +127,13 @@ public class TeacherManagement extends javax.swing.JPanel {
 
         for (Teacher x : list) {
             model.addRow(new Object[]{x.getMaGv(), x.getHoTen(), x.isGioiTinh(), x.getLuong()});
+        }
+        if (this.Table1.getRowCount() == 0) {
+            textID.setVisible(true);
+            labelMa.setVisible(true);
+        } else if((this.Table1.getRowCount() != 0) && (!edit && !delete)){
+            textID.setVisible(false);
+            labelMa.setVisible(false);
         }
     }
 
@@ -103,19 +150,17 @@ public class TeacherManagement extends javax.swing.JPanel {
         addOb = new javax.swing.JButton();
         EditOb = new javax.swing.JButton();
         DeleteOb = new javax.swing.JButton();
-        jPanel2 = new javax.swing.JPanel();
+        ssss = new javax.swing.JPanel();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
-        jLabel22 = new javax.swing.JLabel();
         jLabel23 = new javax.swing.JLabel();
         jLabel24 = new javax.swing.JLabel();
         textName = new javax.swing.JTextField();
         textDate = new javax.swing.JTextField();
         textAddress = new javax.swing.JTextField();
         textEmail = new javax.swing.JTextField();
-        textID = new javax.swing.JTextField();
         btnMe = new javax.swing.JRadioButton();
         btnFe = new javax.swing.JRadioButton();
         jScrollPane7 = new javax.swing.JScrollPane();
@@ -123,9 +168,13 @@ public class TeacherManagement extends javax.swing.JPanel {
         textSDT = new javax.swing.JTextField();
         jLabel26 = new javax.swing.JLabel();
         jLabel27 = new javax.swing.JLabel();
-        textDegree = new javax.swing.JTextField();
+        jComboBox1 = new javax.swing.JComboBox<>();
+        textID = new javax.swing.JTextField();
+        labelMa = new javax.swing.JLabel();
         jLabel25 = new javax.swing.JLabel();
         textSalary = new javax.swing.JTextField();
+        jPanel1 = new javax.swing.JPanel();
+        headerLabel = new javax.swing.JLabel();
 
         addOb.setText("Thêm");
         addOb.addActionListener(new java.awt.event.ActionListener() {
@@ -154,8 +203,6 @@ public class TeacherManagement extends javax.swing.JPanel {
 
         jLabel21.setText("Địa chỉ:");
 
-        jLabel22.setText("Mã giáo viên");
-
         jLabel23.setText("Email:");
 
         jLabel24.setText("Giới tính: ");
@@ -181,12 +228,6 @@ public class TeacherManagement extends javax.swing.JPanel {
         textEmail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textEmailActionPerformed(evt);
-            }
-        });
-
-        textID.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textIDActionPerformed(evt);
             }
         });
 
@@ -231,106 +272,116 @@ public class TeacherManagement extends javax.swing.JPanel {
 
         jLabel27.setText("Trình độ: ");
 
-        textDegree.addActionListener(new java.awt.event.ActionListener() {
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Tiến sĩ", "Thạc sĩ", "Kỹ sư", "Thực tập" }));
+
+        textID.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                textDegreeActionPerformed(evt);
+                textIDActionPerformed(evt);
             }
         });
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel23)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel19)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel18))
-                            .addComponent(jLabel26)
-                            .addComponent(jLabel20)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel21)
-                                    .addComponent(jLabel22))))
+        labelMa.setText("Mã giáo viên");
+
+        javax.swing.GroupLayout ssssLayout = new javax.swing.GroupLayout(ssss);
+        ssss.setLayout(ssssLayout);
+        ssssLayout.setHorizontalGroup(
+            ssssLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ssssLayout.createSequentialGroup()
+                .addGroup(ssssLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(ssssLayout.createSequentialGroup()
+                        .addComponent(jLabel19)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnMe)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(textDate, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(textName, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(textAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(textID, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(textEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(textSDT, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(37, 37, 37))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel18)
+                        .addGap(253, 253, 253))
+                    .addGroup(ssssLayout.createSequentialGroup()
+                        .addComponent(jLabel20)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(ssssLayout.createSequentialGroup()
                         .addContainerGap()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(ssssLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(ssssLayout.createSequentialGroup()
                                 .addComponent(jLabel24)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnMe)
+                                .addGap(18, 18, 18)
                                 .addComponent(btnFe)
-                                .addGap(76, 76, 76))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jLabel27)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(textDegree, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(29, 29, 29)))))
+                                .addGap(64, 64, 64))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ssssLayout.createSequentialGroup()
+                                .addGroup(ssssLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(ssssLayout.createSequentialGroup()
+                                        .addComponent(labelMa)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(textID, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(ssssLayout.createSequentialGroup()
+                                        .addComponent(jLabel21)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(textAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(ssssLayout.createSequentialGroup()
+                                        .addComponent(jLabel23)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(textEmail, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(ssssLayout.createSequentialGroup()
+                                        .addGap(0, 0, Short.MAX_VALUE)
+                                        .addGroup(ssssLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(textSDT, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(textName, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(textDate, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(18, 18, 18))
+                            .addGroup(ssssLayout.createSequentialGroup()
+                                .addGroup(ssssLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel26)
+                                    .addGroup(ssssLayout.createSequentialGroup()
+                                        .addComponent(jLabel27)
+                                        .addGap(55, 55, 55)
+                                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                 .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 584, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        ssssLayout.setVerticalGroup(
+            ssssLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ssssLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(ssssLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(ssssLayout.createSequentialGroup()
                         .addComponent(jScrollPane7, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(36, 36, 36)
-                                .addComponent(jLabel19))
-                            .addComponent(jLabel18)
-                            .addComponent(textName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(textDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel20))
-                        .addGap(18, 18, 18)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addGroup(ssssLayout.createSequentialGroup()
+                        .addGroup(ssssLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(textID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelMa))
+                        .addGap(34, 34, 34)
+                        .addGroup(ssssLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel19)
+                            .addGroup(ssssLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel18)
+                                .addComponent(textName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(28, 28, 28)
+                        .addGroup(ssssLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel20)
+                            .addComponent(textDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(36, 36, 36)
+                        .addGroup(ssssLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(textAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel21))
-                        .addGap(27, 27, 27)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(textID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel22))
-                        .addGap(36, 36, 36)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel23)
-                            .addComponent(textEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(30, 30, 30)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGap(35, 35, 35)
+                        .addGroup(ssssLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(textEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel23))
+                        .addGap(34, 34, 34)
+                        .addGroup(ssssLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(textSDT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel26))
                         .addGap(18, 18, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(ssssLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnFe)
                             .addComponent(btnMe)
                             .addComponent(jLabel24))
                         .addGap(18, 18, Short.MAX_VALUE)
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addGroup(ssssLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel27)
-                            .addComponent(textDegree, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(20, 20, 20))))
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(19, 19, 19))))
         );
 
         jLabel25.setText("Lương");
@@ -341,43 +392,66 @@ public class TeacherManagement extends javax.swing.JPanel {
             }
         });
 
+        headerLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
+        headerLabel.setText("Thêm giáo viên");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(366, 366, 366)
+                .addComponent(headerLabel)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(17, 17, 17)
+                .addComponent(headerLabel)
+                .addContainerGap(35, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 92, Short.MAX_VALUE))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addComponent(addOb)
-                        .addGap(27, 27, 27)
-                        .addComponent(EditOb)
-                        .addGap(43, 43, 43)
-                        .addComponent(DeleteOb))
+                        .addContainerGap()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(addOb)
+                            .addComponent(jLabel25))
+                        .addGap(46, 46, 46)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(EditOb)
+                                .addGap(56, 56, 56)
+                                .addComponent(DeleteOb))
+                            .addComponent(textSalary, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel25)
-                        .addGap(47, 47, 47)
-                        .addComponent(textSalary, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(21, 21, 21)
+                        .addComponent(ssss, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(22, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel25)
-                    .addComponent(textSalary, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 48, Short.MAX_VALUE)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(ssss, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(textSalary, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel25))
+                .addGap(23, 23, 23)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(addOb)
                     .addComponent(EditOb)
                     .addComponent(DeleteOb))
-                .addGap(35, 35, 35))
+                .addGap(62, 62, 62))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -423,25 +497,26 @@ public class TeacherManagement extends javax.swing.JPanel {
         }
 
     }//GEN-LAST:event_Table1MouseClicked
-    
+
     private Teacher inputInf() {
         Teacher tmp = new Teacher();
 
         if (this.textName.getText().trim().isEmpty() || this.textDate.getText().trim().isEmpty() || this.textAddress.getText().trim().isEmpty() || this.textID.getText().trim().isEmpty()
-                || (!btnFe.isSelected() && !btnMe.isSelected()) || this.textEmail.getText().trim().isEmpty() || this.textSDT.getText().trim().isEmpty()||this.textDegree.getText().trim().isEmpty()
-                ||this.textSalary.getText().trim().isEmpty()) {
-          
+                || (!btnFe.isSelected() && !btnMe.isSelected()) || this.textEmail.getText().trim().isEmpty() || this.textSDT.getText().trim().isEmpty()
+                || this.textSalary.getText().trim().isEmpty()) {
+
             JOptionPane.showMessageDialog(this, "Vui lòng nhập đầy đủ thông tin");
             return null;
         } else {
-            
+
             tmp.setHoTen(this.textName.getText());
             String dateString = this.textDate.getText().trim();
-            String dateRegex = "\\d{2}-\\d{2}-\\d{4}";
+            String dateRegex = "\\d{2}/\\d{2}/\\d{4}";
             Pattern pattern = Pattern.compile(dateRegex);
             Matcher matcher = pattern.matcher(dateString);
             if (!matcher.matches()) {
-                JOptionPane.showMessageDialog(null, "Ngày sinh không hợp lệ\n");
+                JOptionPane.showMessageDialog(null, "Ngày sinh không hợp lệ\n"
+                        + "(dd/mm/yyyy)");
                 return null;
             }
             tmp.setNgaySinh(dateString);
@@ -457,107 +532,151 @@ public class TeacherManagement extends javax.swing.JPanel {
             } else if (this.btnFe.isSelected()) {
                 tmp.setGioiTinh(false);
             }
-            if (this.textSDT.getText().trim().matches("\\d+") && this.textSDT.getText().trim().length() == 10 || this.textSDT.getText().trim().length() == 11) {
+            if (this.textSDT.getText().trim().matches("0[0-9]{9,10}")) {
                 tmp.setSDT(this.textSDT.getText());
             } else {
                 JOptionPane.showMessageDialog(null, "SDT không hợp lệ\n");
                 return null;
             }
-            
-            if (this.textSalary.getText().trim().matches("\\d+") ) {
+
+            if (this.textSalary.getText().trim().matches("\\d+")) {
                 tmp.setLuong(Integer.parseInt(this.textSalary.getText()));
             } else {
-                JOptionPane.showMessageDialog(null, "Không hợp lệ\n");
+                JOptionPane.showMessageDialog(null, "Không hợp lê!!!̣\n(Dữ liệu phải là 1 số)");
                 return null;
             }
-            tmp.setTrinhDo(this.textDegree.getText());
+            String degree = (String) jComboBox1.getSelectedItem();
+            tmp.setTrinhDo(degree);
 
         }
 
         return tmp;
     }
     private void DeleteObActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteObActionPerformed
-         String x= this.textID.getText();
-       HandleTeacher handle = new HandleTeacher();
-        try {
-            handle.deleteStudentDatabase(x);
-        } catch (SQLException ex) {
-            Logger.getLogger(TeacherManagement.class.getName()).log(Level.SEVERE, null, ex);
+        if (!delete) {
+            JOptionPane.showMessageDialog(null, "Bạn đang chuyển sang chế độ xóa giáo viên!!!");
+            add = false;
+            delete = true;
+            edit = false;
+            textID.setVisible(true);
+            labelMa.setVisible(true);
+
+            headerLabel.setText("Xóa giáo viên");
+        } else {
+            String x = this.textID.getText();
+            HandleTeacher handle = new HandleTeacher();
+            try {
+                if (handle.deleteStudentDatabase(x)) {
+                    JOptionPane.showMessageDialog(null, "Xóa thành công!!!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Xóa không thành công!!!");
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(TeacherManagement.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                viewTable();
+            } catch (SQLException ex) {
+                Logger.getLogger(TeacherManagement.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        try {
-            viewTable();
-        } catch (SQLException ex) {
-            Logger.getLogger(TeacherManagement.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        
-      
+
+
     }//GEN-LAST:event_DeleteObActionPerformed
 
     private void EditObActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditObActionPerformed
         // TODO add your handling code here:
-          
+        if (!edit) {
+            JOptionPane.showMessageDialog(null, "Bạn đang chuyển sang chế độ sửa giáo viên!!!");
+            add = false;
+            delete = false;
+            edit = true;
+            textID.setVisible(true);
+            labelMa.setVisible(true);
+            headerLabel.setText("Sửa giáo viên");
+        } else {
             Teacher std = new Teacher();
             std = inputInf();
             if (std == null) {
                 return;
             }
             try {
-                if(!handle.updateStudentDatabase(std)){
+                if (!handle.updateStudentDatabase(std)) {
                     JOptionPane.showMessageDialog(null, "Không tìm thấy giáo viên");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Sửa thành công!!!");
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(TeacherManagement.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-          
-          
-        try {
-            viewTable();
-        } catch (SQLException ex) {
-            Logger.getLogger(TeacherManagement.class.getName()).log(Level.SEVERE, null, ex);
+            try {
+                System.out.println(edit);
+                viewTable();
+            } catch (SQLException ex) {
+                Logger.getLogger(TeacherManagement.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
+            
     }//GEN-LAST:event_EditObActionPerformed
-    
+
     private void addObActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addObActionPerformed
         // TODO add your handling code here:
-          // TODO add your handling code here:
-        x = inputInf();
-        if (x == null) {
-            return;
-        }
-
-        for (Teacher tmp : list) {
-            if (tmp.getMaGv().equalsIgnoreCase(x.getMaGv())) {
-                JOptionPane.showMessageDialog(null, "Mã giáo viên đã tồn tại");
+        // TODO add your handling code here:
+        if (!add) {
+            JOptionPane.showMessageDialog(null, "Bạn đang chuyển sang chế độ thêm giáo viên!!!");
+            add = true;
+            delete = false;
+            edit = false;
+            if (this.Table1.getRowCount() == 0) {
+                textID.setVisible(true);
+                labelMa.setVisible(true);
+            } else {
+                textID.setVisible(false);
+                labelMa.setVisible(false);
+            }
+            headerLabel.setText("Thêm giáo viên");
+        } else {
+            x = inputInf();
+            if (x == null) {
                 return;
             }
 
+            for (Teacher tmp : list) {
+                if (tmp.getMaGv().equalsIgnoreCase(x.getMaGv())) {
+                    JOptionPane.showMessageDialog(null, "Mã giáo viên đã tồn tại");
+                    return;
+                }
+
+            }
+
+            try {
+                if (handle.addTeacherDatabase(x)) {
+                    JOptionPane.showMessageDialog(null, "Thêm thành công!!!");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Thêm không thành công");
+                }
+
+            } catch (SQLException ex) {
+                Logger.getLogger(TeacherManagement.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                Logger.getLogger(TeacherManagement.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            try {
+                viewTable();
+            } catch (SQLException ex) {
+                Logger.getLogger(TeacherManagement.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        
-        try {
-            handle.addTeacherDatabase(x);
-        } catch (SQLException ex) {
-            Logger.getLogger(TeacherManagement.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(TeacherManagement.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        try {
-            viewTable();
-        } catch (SQLException ex) {
-            Logger.getLogger(TeacherManagement.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
+
+
     }//GEN-LAST:event_addObActionPerformed
 
     private void textSDTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textSDTActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_textSDTActionPerformed
-
-    private void textDegreeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textDegreeActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_textDegreeActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -568,21 +687,23 @@ public class TeacherManagement extends javax.swing.JPanel {
     private javax.swing.JRadioButton btnFe;
     private javax.swing.JRadioButton btnMe;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JLabel headerLabel;
+    private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel18;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel24;
     private javax.swing.JLabel jLabel25;
     private javax.swing.JLabel jLabel26;
     private javax.swing.JLabel jLabel27;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane7;
+    private javax.swing.JLabel labelMa;
+    private javax.swing.JPanel ssss;
     private javax.swing.JTextField textAddress;
     private javax.swing.JTextField textDate;
-    private javax.swing.JTextField textDegree;
     private javax.swing.JTextField textEmail;
     private javax.swing.JTextField textID;
     private javax.swing.JTextField textName;

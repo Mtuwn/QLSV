@@ -1,6 +1,7 @@
 ﻿create database QuanLySinhVien
 go
 use QuanLySinhVien;
+drop database QuanLySinhVien
 go
 create table Lop(
 	TenLop Nvarchar(25), 
@@ -79,20 +80,20 @@ create table LopTheoMon(
 go
 -- Insert data into Lop (5 rows)
 INSERT INTO Lop  VALUES
-('AT18P','ATTT'),
+('AT18A','ATTT'),
+('AT18B','ATTT'),
 ('AT18C','ATTT'),
 ('AT18D','ATTT'),
-('AT18E','ATTT'),
-('AT18F','ATTT');
+('AT18E','ATTT');
 
 go
 -- Insert data into SinhVien (5 rows)
 INSERT INTO SinhVien (Msv, HoTen, NgaySinh, SDT, DiaChi, Email, Lop,passwd) VALUES
-('Msv123', 'John Doe', '16-04-2003', '0123456789', 'Address1', 'john.doe@example.com', 'AT18P','123456'),
-('Msv124', 'Jane Doe', '16-04-2003', '0123456789', 'Address2', 'jane.doe@example.com', 'AT18C','123456'),
-('Msv125', 'Alice Smith', '16-04-2003', '0123456789', 'Address3', 'alice.smith@example.com', 'AT18D','123456'),
-('Msv126', 'Bob Johnson', '16-04-2003', '0123456789', 'Address4', 'bob.johnson@example.com', 'AT18E','123456'),
-('Msv127', 'Eva Davis', '16-04-2003', '0123456789', 'Address5', 'eva.davis@example.com', 'AT18F','123456');
+('AT180101', N'Nguyễn Văn A', '16/04/2003', '0123456789', 'Address1', 'john.doe@example.com', 'AT18A','123456'),
+('AT180201', N'Nguyễn Văn A', '16/04/2003', '0123456789', 'Address2', 'jane.doe@example.com', 'AT18B','123456'),
+('AT180301', N'Nguyễn Văn A', '16/04/2003', '0123456789', 'Address3', 'alice.smith@example.com', 'AT18C','123456'),
+('AT180401', N'Nguyễn Văn A', '16/04/2003', '0123456789', 'Address4', 'bob.johnson@example.com', 'AT18D','123456'),
+('AT180501', N'Nguyễn Văn A', '16/04/2003', '0123456789', 'Address5', 'eva.davis@example.com', 'AT18E','123456');
 go
 
 -- Insert data into MonHoc (5 rows)
@@ -106,28 +107,28 @@ go
 
 -- Insert data into GiaoVien (5 rows)
 INSERT INTO GiaoVien (MaGv, HoTen, NgaySinh, SDT, DiaChi, Email, TrinhDo, Luong, MaMon,passwd) VALUES
-('MaGv1', 'Teacher A', '16-04-2003', '0123456789', 'TeacherAddress1', 'teacherA@example.com', 'PhD', 5000,'Mon1','123456'),
-('MaGv2', 'Teacher B', '16-04-2003', '0123456789', 'TeacherAddress2', 'teacherB@example.com', 'Master', 4500,'Mon1','123456'),
-('MaGv3', 'Teacher C', '16-04-2003', '0123456789', 'TeacherAddress3', 'teacherC@example.com', 'Bachelor', 4000,'Mon1','123456'),
-('MaGv4', 'Teacher D', '16-04-2003', '0123456789', 'TeacherAddress4', 'teacherD@example.com', 'PhD', 5000,'Mon1','123456'),
-('MaGv5', 'Teacher E', '16-04-2003', '0123456789', 'TeacherAddress5', 'teacherE@example.com', 'Master', 4500,'Mon1','123456');
+('GV0001', N'Nguyễn văn A', '16/04/2003', '0123456789', 'TeacherAddress1', 'teacherA@example.com', N'Tiến sĩ', 5000,'Mon1','123456'),
+('GV0002', N'Nguyễn văn AB', '16/04/2003', '0123456789', 'TeacherAddress2', 'teacherB@example.com', N'Kỹ sư', 4500,'Mon1','123456'),
+('GV0003', 'Nguyễn văn AC', '16/04/2003', '0123456789', 'TeacherAddress3', 'teacherC@example.com', N'Tiến sĩ', 4000,'Mon1','123456'),
+('GV0004', N'Nguyễn văn AD', '16/04/2003', '0123456789', 'TeacherAddress4', 'teacherD@example.com', N'Tiến sĩ', 5000,'Mon1','123456'),
+('GV0005', N'Nguyễn văn AE', '16/04/2003', '0123456789', 'TeacherAddress5', 'teacherE@example.com', N'Tiến sĩ', 4500,'Mon1','123456');
 go
 
 -- Insert data into Diem (5 rows)
 INSERT INTO Diem (Msv, MaMon, DiemChuyenCan, DiemGk, DiemThi) VALUES
-('Msv123', 'Mon1', 7.5, 8.0, 9.0),
-('Msv124', 'Mon2', 8.5, 7.0, 8.0),
-('Msv125', 'Mon3', 9.0, 8.5, 7.5),
-('Msv126', 'Mon4', 7.0, 9.0, 8.5),
-('Msv127', 'Mon5', 8.0, 7.5, 9.0);
+('AT180101', 'Mon1', 7.5, 8.0, 9.0),
+('AT180201', 'Mon2', 8.5, 7.0, 8.0),
+('AT180301', 'Mon3', 9.0, 8.5, 7.5),
+('AT180401', 'Mon4', 7.0, 9.0, 8.5),
+('AT180501', 'Mon5', 8.0, 7.5, 9.0);
 go
 -- Insert data into LopTheoMon (5 rows)
 INSERT INTO LopTheoMon (MaMon, Msv) VALUES
-('Mon1', 'Msv123'),
-('Mon2', 'Msv124'),
-('Mon3', 'Msv125'),
-('Mon4', 'Msv126'),
-('Mon5', 'Msv127');
+('Mon1', 'AT180101'),
+('Mon2', 'AT180201'),
+('Mon3', 'AT180301'),
+('Mon4', 'AT180401'),
+('Mon5', 'AT180501');
 
 
 

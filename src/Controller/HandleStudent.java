@@ -24,8 +24,13 @@ public class HandleStudent {
     }
     Connection conn = Connect.getConnection();
 
-    public void addStudentDatabase(Student x) throws SQLException, ParseException {
-        System.out.println(x);
+    private String handlePasswd(String passwd) {
+        String regex = "-";
+        passwd = passwd.replaceAll(regex, "");
+        return passwd;
+    }
+
+    public boolean addStudentDatabase(Student x) throws SQLException, ParseException {
         String sql = "INSERT INTO SinhVien VALUES (?,?,?,?,?,?,?,?,?)";
         int gioiTinh = (x.isGioiTinh().equals("Nam")) ? 1 : 0;
 
@@ -40,12 +45,12 @@ public class HandleStudent {
             preparedStatement.setString(5, x.getSDT());
             preparedStatement.setString(6, x.getDiaChi());
             preparedStatement.setString(7, x.getEmail());
-            preparedStatement.setString(8, x.getLop()); 
-            preparedStatement.setString(9, x.getNgaySinh());
-            preparedStatement.executeUpdate();
+            preparedStatement.setString(8, x.getLop());
+            preparedStatement.setString(9, handlePasswd(x.getNgaySinh()));
+            return preparedStatement.executeUpdate()>0;
+        } catch(SQLException e){
+            return false;
         }
-        
-        
 
     }
 
@@ -65,10 +70,10 @@ public class HandleStudent {
             preparedStatement.setString(5, x.getDiaChi());
             preparedStatement.setString(6, x.getEmail());
             preparedStatement.setString(7, x.getLop());
-             preparedStatement.setString(8, x.getNgaySinh());
+            preparedStatement.setString(8, x.getNgaySinh());
 
             preparedStatement.setString(9, x.getMsv());
-           
+
             // Sử dụng executeUpdate cho truy vấn INSERT/UPDATE/DELETE
             return preparedStatement.executeUpdate() > 0;
         }
@@ -77,11 +82,11 @@ public class HandleStudent {
 
     public Boolean deleteStudentDatabase(String x) throws SQLException {
         String sql = "delete from Diem where Msv = ?  ;delete from LopTheoMon where Msv = ?  ;delete from SinhVien where Msv = ?  ;";
-        
+
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setString(1, x);
-             preparedStatement.setString(2, x);
-              preparedStatement.setString(3, x);
+            preparedStatement.setString(2, x);
+            preparedStatement.setString(3, x);
             return preparedStatement.executeUpdate() > 0;
         }
 
