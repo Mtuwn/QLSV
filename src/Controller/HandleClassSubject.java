@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -44,6 +45,10 @@ public class HandleClassSubject {
             sttd.setString(1, MaMon);
             sttd.setString(2, Msv); 
             return sttd.executeUpdate()>0;
+        } catch (Exception e){
+                        JOptionPane.showMessageDialog(null, "Sinh viên không tồn tại");
+                        return false;
+
         }
         
         

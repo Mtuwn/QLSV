@@ -94,6 +94,8 @@ public class ClassSubjectManagement extends javax.swing.JPanel {
 
         jLabel25.setText("Môn học");
 
+        setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
         textMsv.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textMsvActionPerformed(evt);
@@ -212,16 +214,16 @@ public class ClassSubjectManagement extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(0, 29, Short.MAX_VALUE)
+                .addGap(0, 27, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 29, Short.MAX_VALUE))
+                .addGap(0, 27, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(0, 21, Short.MAX_VALUE)
+                .addGap(0, 19, Short.MAX_VALUE)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 21, Short.MAX_VALUE))
+                .addGap(0, 19, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -249,7 +251,7 @@ public class ClassSubjectManagement extends javax.swing.JPanel {
         HandleClassSubject handle = new HandleClassSubject();
         try {
             if(!handle.addClassDatabase(TenMon, Msv)){
-                JOptionPane.showMessageDialog(null, "Thêm không thành công");
+                return;
             } else JOptionPane.showMessageDialog(null, "Thêm thành công");
             viewTable();
         } catch (SQLException ex) {

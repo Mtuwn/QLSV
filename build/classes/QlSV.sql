@@ -66,7 +66,7 @@ create table Diem(
     FOREIGN KEY (MaMon) REFERENCES Monhoc(MaMon)
 
 )
-
+select * from diem
 go
 create table LopTheoMon(
 	MaMon Nvarchar(25) not null,
@@ -111,9 +111,11 @@ INSERT INTO GiaoVien (MaGv, HoTen, NgaySinh, SDT, DiaChi, Email, TrinhDo, Luong,
 ('GV0002', N'Nguyễn văn AB', '16/04/2003', '0123456789', 'TeacherAddress2', 'teacherB@example.com', N'Kỹ sư', 4500,'Mon1','123456'),
 ('GV0003', 'Nguyễn văn AC', '16/04/2003', '0123456789', 'TeacherAddress3', 'teacherC@example.com', N'Tiến sĩ', 4000,'Mon1','123456'),
 ('GV0004', N'Nguyễn văn AD', '16/04/2003', '0123456789', 'TeacherAddress4', 'teacherD@example.com', N'Tiến sĩ', 5000,'Mon1','123456'),
-('GV0005', N'Nguyễn văn AE', '16/04/2003', '0123456789', 'TeacherAddress5', 'teacherE@example.com', N'Tiến sĩ', 4500,'Mon1','123456');
+('GV0006', N'Nguyễn văn AE', '16/04/2003', '0123456789', 'TeacherAddress5', 'teacherE@example.com', N'Tiến sĩ', 4500,'Mon3','123456');
 go
-
+delete from GiaoVien
+select * from GiaoVien
+select S.Msv, s.Msv, d.DiemChuyenCan,d.DiemGk from SinhVien as s left join diem as d on d.Msv = s.Msv
 -- Insert data into Diem (5 rows)
 INSERT INTO Diem (Msv, MaMon, DiemChuyenCan, DiemGk, DiemThi) VALUES
 ('AT180101', 'Mon1', 7.5, 8.0, 9.0),
@@ -121,6 +123,8 @@ INSERT INTO Diem (Msv, MaMon, DiemChuyenCan, DiemGk, DiemThi) VALUES
 ('AT180301', 'Mon3', 9.0, 8.5, 7.5),
 ('AT180401', 'Mon4', 7.0, 9.0, 8.5),
 ('AT180501', 'Mon5', 8.0, 7.5, 9.0);
+
+INSERT INTO Diem (Msv, MaMon, DiemChuyenCan, DiemGk, DiemThi) VALUES(?,?,?,?,?)
 go
 -- Insert data into LopTheoMon (5 rows)
 INSERT INTO LopTheoMon (MaMon, Msv) VALUES
@@ -130,25 +134,27 @@ INSERT INTO LopTheoMon (MaMon, Msv) VALUES
 ('Mon4', 'AT180401'),
 ('Mon5', 'AT180501');
 
+select  L.Msv, L.MaMon,D.DiemChuyenCan,D.DiemGk,D.DiemThi,S.HoTen from LopTheoMon as L left join Diem as D on L.Msv = D.Msv left join SinhVien as S on S.Msv = D.Msv left join MonHoc M on M.MaMon = L.MaMon where M.TenMon = 'Biology' Order by L.Msv
+select  L.Msv, L.MaMon,D.DiemChuyenCan,D.DiemGk,D.DiemThi,S.HoTen from LopTheoMon as L left join Diem as D on L.Msv = D.Msv left join SinhVien as S on S.Msv = D.Msv left join MonHoc M on M.MaMon = L.MaMon where M.TenMon = 'Biology'
 
-
-
-
-
-
+select L.Msv, L.MaMon,D.DiemChuyenCan,D.DiemGk,D.DiemThi from  LopTheoMon L  left join Diem D on D.Msv = L.Msv left join MonHoc M on M.MaMon = D.MaMon where M.TenMon = 'Biology'
+select * from diem
+select * from LopTheoMon
 select * from SinhVien
-
+select * from MonHoc
 drop table khaoThi
 create table khaoThi(
 	username Nvarchar(15),
 	passwd Nvarchar(15),
 	primary key(username)
 )
-
+select d.DiemChuyenCan from SinhVien as s left join diem as d on d.Msv = s.Msv join MonHoc M on M.MaMon = D.MaMon where M.TenMon = 'chemistry'
 
 insert into khaoThi values('NTT2003','19052003'),('TMT2003','19052003');
 
-select * from SinhVien
+select S.Msv, s.HoTen, d.DiemChuyenCan,d.DiemGk, d.MaMon from SinhVien as s left join diem as d on d.Msv = s.Msv join MonHoc M on M.MaMon = D.MaMon
+where M.TenMon = 'Chemistry'
 select * from GiaoVien
-
-
+select D.*,S.HoTen from Diem as D join MonHoc as M on M.MaMon = D.MaMon join SinhVien as S on S.Msv = D.Msv where M.TenMon= 'Math' Order by S.HoTen
+select * from diem
+select G.MaGv,G.HoTen,G.NgaySinh,G.GioiTinh,G.SDT,G.DiaChi,G.Email,G.TrinhDo,G.Luong,M.TenMon,G.passwd, G.MaMon from  giaovien G, MonHoc M where G.MaGv = 'GV0003' and G.MaMon = M.MaMon

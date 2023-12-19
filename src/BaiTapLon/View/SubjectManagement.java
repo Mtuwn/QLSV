@@ -99,6 +99,8 @@ public class SubjectManagement extends javax.swing.JPanel {
         textTin = new javax.swing.JTextField();
         textMaMon = new javax.swing.JTextField();
 
+        setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
         textMon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 textMonActionPerformed(evt);
@@ -234,7 +236,7 @@ public class SubjectManagement extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 12, Short.MAX_VALUE)
+                .addGap(0, 8, Short.MAX_VALUE)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -255,15 +257,17 @@ public class SubjectManagement extends javax.swing.JPanel {
 
     private Subject getInput() {
         Subject tmp;
-        String MaMon = this.textMaMon.getText();
-        String TenMon = this.textMon.getText();
-        int SoTin = Integer.parseInt(this.textTin.getText().trim());
-        if (MaMon.trim().isEmpty() || TenMon.trim().isEmpty() || this.textTin.getText().trim().isEmpty()) {
+
+        if (this.textMaMon.getText().trim().isEmpty() || this.textMon.getText().isEmpty() || this.textTin.getText().trim().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Vui lòng không để trống thông tin");
             return null;
         }
+        String MaMon = this.textMaMon.getText();
+        String TenMon = this.textMon.getText();
+        int SoTin = Integer.parseInt(this.textTin.getText().trim());
         if (SoTin <= 0) {
             JOptionPane.showMessageDialog(null, "Số tín không hợp lệ");
+            return null;
         }
 
 //       for(Subject x : list){
@@ -273,7 +277,7 @@ public class SubjectManagement extends javax.swing.JPanel {
 //           }
 //       }
         tmp = new Subject(MaMon.trim(), TenMon.trim(), SoTin);
-  
+
         return tmp;
     }
     private void addObActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addObActionPerformed
@@ -285,7 +289,7 @@ public class SubjectManagement extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(null, "Dữ liệu không hợp lệ");
                     return;
                 }
-                
+
             }
 
             HandleSubject handle = new HandleSubject();
@@ -297,34 +301,34 @@ public class SubjectManagement extends javax.swing.JPanel {
             } catch (ParseException ex) {
                 Logger.getLogger(SubjectManagement.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
         }
     }//GEN-LAST:event_addObActionPerformed
 
     private void EditObActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditObActionPerformed
         // TODO add your handling code here:
-          x = getInput();
+        x = getInput();
         if (x != null) {
-             for(Subject i : list){
-           if(i.getTenMon().equalsIgnoreCase(x.getTenMon()) && !i.getMaMon().equalsIgnoreCase(x.getMaMon())){
-               JOptionPane.showMessageDialog(null, "Tên môn này đã tồn tại");
-               return ;
-           }
-       }
-            
+            for (Subject i : list) {
+                if (i.getTenMon().equalsIgnoreCase(x.getTenMon()) && !i.getMaMon().equalsIgnoreCase(x.getMaMon())) {
+                    JOptionPane.showMessageDialog(null, "Tên môn này đã tồn tại");
+                    return;
+                }
+            }
+
             HandleSubject handle = new HandleSubject();
             try {
-                if(!handle.updateSubjectDatabase(x)){
+                if (!handle.updateSubjectDatabase(x)) {
                     JOptionPane.showMessageDialog(null, "Mã môn không đúng!!!");
                     return;
-                }         
+                }
                 viewTable();
             } catch (SQLException ex) {
                 Logger.getLogger(SubjectManagement.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
+
         }
-        
+
     }//GEN-LAST:event_EditObActionPerformed
 
     private void DeleteObActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteObActionPerformed
