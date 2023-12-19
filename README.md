@@ -67,7 +67,7 @@ Cơ bản thì nó cũng tương tự như của sinh viên, nó chỉ được 
 
 - Button thư 4 `Xem điểm`
 
-![image](https://hackmd.io/_uploads/Hy0NxWJw6.png)
+![image](https://hackmd.io/_uploads/By6mSHkw6.png)
 
 Tại màn hình giao diện này sẽ là danh sách điểm của từng sinh viên theo từng môn học. Chúng ta có thể thay đổi danh sách bằng cách lựa chọn trên danh sách các môn học của combo box. Bên cạnh đó, khi muốn thay đổi điểm của từng sinh viên, chúng ta có thể click vào bảng table để lấy thông tin sinh viên, ngay lập tức thông tin sẽ được hiển thị ngay bên cạnh, mặc khác thì các thông tin sẽ chỉ được chỉnh sửa là điểm chuyên cần điểm giữa kỳ và điểm thi, các dữ liệu khác sẽ được khóa không cho người dùng thay đổi tại giao diện chức năng này. Và tất nhiên dữ liệu trống thì sẽ bị báo lỗi
 
@@ -82,7 +82,7 @@ Tại đây sẽ là danh sách các môn học, kèm theo đó là đó là cá
 
 - Cuối cùng là button cuối cùng, khi click vào đây sẽ xuất hiện màn hình giao diện của chức năng thêm sinh viên vào các lớp của môn học VD: Lớp Toán A1, OOP,..
 
-![image](https://hackmd.io/_uploads/SkouMZJw6.png)
+![image](https://hackmd.io/_uploads/B1jPSHkva.png)
 
 - Tại đây người dùng sẽ có quyền add sinh viên vào các lớp, cũng như xóa sinh viên. Nó sẽ báo lỗi nếu như msv không tồn tại 
 
@@ -109,4 +109,4 @@ Tại đây sẽ là danh sách các môn học, kèm theo đó là đó là cá
 
     + Tra cứu điểm của sinh viên toàn trường: 
 
-    ![image](https://hackmd.io/_uploads/r1cZuW1vT.png)
+    ![image](https://hackmd.io/_uploads/BkhoSB1v6.png)
