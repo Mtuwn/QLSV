@@ -50,7 +50,17 @@ public class ClassSubjectManagement extends javax.swing.JPanel {
         model.setNumRows(0);
         list.removeAll(list);
         String selectedItem = (String) jComboBox1.getSelectedItem();
-        String sql = "select L.Msv,S.HoTen,M.TenMon, M.SoTin from LopTheoMon as L join MonHoc as M on M.MaMon = L.MaMon join SinhVien as S on S.Msv = L.Msv where M.TenMon=? order by L.Msv";
+        String sql = "SELECT\n"
+                + "    LT.Msv,\n"
+                + "    SV.HoTen,\n"
+                + "    MH.TenMon AS MonHoc,\n"
+                + "    MH.SoTin\n"
+                + "FROM\n"
+                + "    LopTheoMon LT\n"
+                + "    INNER JOIN SinhVien SV ON LT.Msv = SV.Msv\n"
+                + "    INNER JOIN MonHoc MH ON LT.MaMon = MH.MaMon\n"
+                + "LEFT JOIN MonHoc M ON LT.MaMon = M.MaMon\n"
+                + "	where M.TenMon = ? Order by LT.Msv";
 
         Connection conn = Connect.getConnection();
 
@@ -228,20 +238,22 @@ public class ClassSubjectManagement extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void DeleteObActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DeleteObActionPerformed
-         String TenMon = (String) jComboBox1.getSelectedItem();
+        String TenMon = (String) jComboBox1.getSelectedItem();
         String Msv = this.textMsv.getText();
-         HandleClassSubject handle = new HandleClassSubject();
+        HandleClassSubject handle = new HandleClassSubject();
         try {
-            if(!handle.deleteClassDatabase(TenMon, Msv)){
+            if (!handle.deleteClassDatabase(TenMon, Msv)) {
                 JOptionPane.showMessageDialog(null, "Xóa không thành công");
-            } else JOptionPane.showMessageDialog(null, "Xóa thành công");
+            } else {
+                JOptionPane.showMessageDialog(null, "Xóa thành công");
+            }
             viewTable();
         } catch (SQLException ex) {
             Logger.getLogger(ClassSubjectManagement.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
             Logger.getLogger(ClassSubjectManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_DeleteObActionPerformed
 
     private void addObActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addObActionPerformed
@@ -250,16 +262,18 @@ public class ClassSubjectManagement extends javax.swing.JPanel {
         String Msv = this.textMsv.getText();
         HandleClassSubject handle = new HandleClassSubject();
         try {
-            if(!handle.addClassDatabase(TenMon, Msv)){
+            if (!handle.addClassDatabase(TenMon, Msv)) {
                 return;
-            } else JOptionPane.showMessageDialog(null, "Thêm thành công");
+            } else {
+                JOptionPane.showMessageDialog(null, "Thêm thành công");
+            }
             viewTable();
         } catch (SQLException ex) {
             Logger.getLogger(ClassSubjectManagement.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
             Logger.getLogger(ClassSubjectManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_addObActionPerformed
 
     private void Table1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_Table1MouseClicked

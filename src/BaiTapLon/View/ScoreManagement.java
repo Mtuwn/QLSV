@@ -62,7 +62,19 @@ public class ScoreManagement extends javax.swing.JPanel {
         model.setNumRows(0);
         list.removeAll(list);
         String selectedItem = (String) jComboBox1.getSelectedItem();
-        String sql = "select  L.Msv, L.MaMon,D.DiemChuyenCan,D.DiemGk,D.DiemThi,S.HoTen from LopTheoMon as L left join Diem as D on L.Msv = D.Msv left join SinhVien as S on S.Msv = L.Msv left join MonHoc M on M.MaMon = L.MaMon where M.TenMon = ? Order by L.Msv";
+        String sql = "SELECT\n" +
+"    LT.Msv,\n" +
+"    LT.MaMon,\n" +
+"    D.DiemChuyenCan,\n" +
+"    D.DiemGk,\n" +
+"    D.DiemThi,\n" +
+"	SV.HoTen\n" +
+"FROM\n" +
+"    LopTheoMon LT\n" +
+"    INNER JOIN SinhVien SV ON LT.Msv = SV.Msv\n" +
+"    LEFT JOIN Diem D ON LT.Msv = D.Msv AND LT.MaMon = D.MaMon\n" +
+"	LEFT JOIN MonHoc M ON LT.MaMon = M.MaMon\n" +
+"	where M.TenMon = ? Order by LT.Msv";
         
         Connection conn = Connect.getConnection();
 

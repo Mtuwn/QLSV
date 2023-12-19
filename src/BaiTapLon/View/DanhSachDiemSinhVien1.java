@@ -36,10 +36,10 @@ public class DanhSachDiemSinhVien1 extends javax.swing.JPanel {
 
         Table1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null}
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "MSV", "Họ Tên", "Điểm thành phần  1", "Điểm thành phần 2", "Điểm tổng kết"
+                "MSV", "Họ Tên", "Môn", "Điểm Chuyên Cần", "Điểm Giữa Kì", "Điểm KTHP"
             }
         ));
         Table1.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -70,7 +70,7 @@ public class DanhSachDiemSinhVien1 extends javax.swing.JPanel {
         model.setNumRows(0);
         list.removeAll(list);
 
-    String sql = "select * from diem";
+    String sql = "select sv.msv,hoten,mamon,diemchuyencan,diemgk,diemthi from diem d,sinhvien sv where d.msv = sv.msv";
 
         Connection conn = Connect.getConnection();
 
@@ -78,7 +78,25 @@ public class DanhSachDiemSinhVien1 extends javax.swing.JPanel {
            
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                x = new DiemSinhVien(rs.getString(1), rs.getString(2), rs.getFloat(3), rs.getFloat(4), rs.getFloat(5));
+                String mon="";
+                switch (rs.getString(3)) {
+                    case "1001":
+                     mon = "Toán A1" ;   
+                    break;
+                    case "1002" :
+                     mon = "OOP" ;   
+                    break;
+                    case "1003":
+                     mon = "CTDL & GT" ;   
+                    break;
+                    case "1004":
+                     mon = "Linux" ;   
+                    break;
+                    default: 
+                        mon ="Nhập Môn Mật Mã";
+                    
+                }
+                x = new DiemSinhVien(rs.getString(1),rs.getString(2), mon, rs.getFloat(4), rs.getFloat(5), rs.getFloat(6));
                 list.add(x);
             }
         } catch (SQLException e) {
@@ -86,7 +104,7 @@ public class DanhSachDiemSinhVien1 extends javax.swing.JPanel {
         }
 
         for (DiemSinhVien x : list) {
-            model.addRow(new Object[]{x.getMaSV(), x.getMaMon(), x.getDiemCC(), x.getDiemGK(),x.getDiemCK()});
+            model.addRow(new Object[]{x.getMaSV(),x.getName(), x.getMon(), x.getDiemCC(), x.getDiemGK(),x.getDiemCK()});
         }
        
     }

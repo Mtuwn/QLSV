@@ -23,12 +23,39 @@ public class DiemSinhVien {
         this.diemCK =diemCK;
         
     }
+     public DiemSinhVien(String maSV,String name, String mon, float diemCC, float diemGK,float diemCK) {
+         this.name=name;
+         this.maSV = maSV;
+        this.mon = mon;
+        this.diemCC = diemCC;
+        this.diemGK =diemGK;
+        this.diemCK =diemCK;
+        
+    }
     
     private String maSV;
     private String maMon;
     private float diemCC;
     private float diemGK;
     private float diemCK;
+    private String name;
+    private String mon;
+
+    public String getName() {
+        return name;
+    }
+
+    public String getMon() {
+        return mon;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setMon(String mon) {
+        this.mon = mon;
+    }
 
     public void setMaSV(String maSV) {
         this.maSV = maSV;

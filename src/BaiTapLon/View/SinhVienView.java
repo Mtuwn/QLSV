@@ -573,8 +573,6 @@ public class SinhVienView extends javax.swing.JFrame {
         }
         
 // TODO add your handling code here:
-        
-// TODO add your handling code here:
     }//GEN-LAST:event_DSGiaoVienActionPerformed
 
     private void DiemSVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_DiemSVActionPerformed
@@ -615,7 +613,6 @@ public class SinhVienView extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(SinhVienView.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */

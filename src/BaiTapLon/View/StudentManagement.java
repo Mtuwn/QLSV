@@ -256,7 +256,7 @@ public class StudentManagement extends javax.swing.JPanel {
         });
         jScrollPane7.setViewportView(Table1);
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ATTT", "CT", "DTVT" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "ATTT", "CNTT", "DTVT" }));
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -689,6 +689,7 @@ public class StudentManagement extends javax.swing.JPanel {
     }
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
+       
         String selectedItem1 = (String) jComboBox1.getSelectedItem();
         String selectedItem3 = (String) jComboBox3.getSelectedItem();
 
@@ -697,8 +698,16 @@ public class StudentManagement extends javax.swing.JPanel {
         } catch (SQLException ex) {
             Logger.getLogger(StudentManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        
         showCombobox(selectedItem1);
+        
+            if (this.Table1.getRowCount() == 0) {
+                textID.setVisible(true);
+                labelMsv.setVisible(true);
+            } else {
+                 textID.setVisible(false);
+                labelMsv.setVisible(false);
+            }
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
