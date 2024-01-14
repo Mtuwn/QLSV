@@ -2,29 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/BaiTapLon/View/ClassSubjectManagement.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/BaiTapLon/View/SinhVienView.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/BaiTapLon/View/DanhSachSinhVien1.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/BaiTapLon/View/StudentManagement.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/BaiTapLon/View/LoginView.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/Controller/HandleScore.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/BaiTapLon/View/TeacherManagement.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/BaiTapLon/View/ScoreManagement.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/Controller/HandleSubject.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/Model/Score.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/BaiTapLon/View/GiaoVienView.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/Controller/ActiveUser.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/Controller/HandleViewInformation.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/BaiTapLon/View/ClassMannagement.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/Controller/HandleStudent.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/Model/DiemSinhVien.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/BaiTapLon/View/SubjectManagement.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/BaiTapLon/View/DanhSachGiaoVien1.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/BaiTapLon/View/ViewSinhVienGiaoVien.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/BaiTapLon/View/KhaoThiView.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/Controller/HandleClassSubject.java</file>
-            <file>file:/D:/Tai%20Lieu%20hoc%20tap/BTJAVA/QLSV/src/BaiTapLon/View/DanhSachDiemSinhVien1.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

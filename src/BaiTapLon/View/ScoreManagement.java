@@ -33,13 +33,14 @@ public class ScoreManagement extends javax.swing.JPanel {
     Score x = new Score();
     private static int pos = 0;
     private boolean flag = true;
-    
+
     public ScoreManagement() throws SQLException {
         initComponents();
         viewTable();
         ShowComboBox();
     }
-     private void view() throws SQLException {
+
+    private void view() throws SQLException {
 
         x = list.get(pos);
         this.textName.setText(x.getHoTen());
@@ -49,57 +50,58 @@ public class ScoreManagement extends javax.swing.JPanel {
         this.textDiemTk.setEditable(false);
         this.textName.setEditable(false);
         this.textMsv.setEditable(false);
-        
+
         this.textDiemCC.setText(Float.toString(x.getDiemChuyenCan()));
         this.textDiemGK.setText(Float.toString(x.getDiemGk()));
-       
+
 //        
 //       
     }
-    
+
     private void viewTable() throws SQLException {
         DefaultTableModel model = (DefaultTableModel) this.Table1.getModel();
         model.setNumRows(0);
         list.removeAll(list);
         String selectedItem = (String) jComboBox1.getSelectedItem();
-        String sql = "SELECT\n" +
-"    LT.Msv,\n" +
-"    LT.MaMon,\n" +
-"    D.DiemChuyenCan,\n" +
-"    D.DiemGk,\n" +
-"    D.DiemThi,\n" +
-"	SV.HoTen\n" +
-"FROM\n" +
-"    LopTheoMon LT\n" +
-"    INNER JOIN SinhVien SV ON LT.Msv = SV.Msv\n" +
-"    LEFT JOIN Diem D ON LT.Msv = D.Msv AND LT.MaMon = D.MaMon\n" +
-"	LEFT JOIN MonHoc M ON LT.MaMon = M.MaMon\n" +
-"	where M.TenMon = ? Order by LT.Msv";
-        
+        String sql = "SELECT\n"
+                + "    LT.Msv,\n"
+                + "    LT.MaMon,\n"
+                + "    D.DiemChuyenCan,\n"
+                + "    D.DiemGk,\n"
+                + "    D.DiemThi,\n"
+                + "	SV.HoTen\n"
+                + "FROM\n"
+                + "    LopTheoMon LT\n"
+                + "    INNER JOIN SinhVien SV ON LT.Msv = SV.Msv\n"
+                + "    LEFT JOIN Diem D ON LT.Msv = D.Msv AND LT.MaMon = D.MaMon\n"
+                + "	LEFT JOIN MonHoc M ON LT.MaMon = M.MaMon\n"
+                + "	where M.TenMon = ? Order by LT.Msv";
+
         Connection conn = Connect.getConnection();
 
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
-            
+
             preparedStatement.setString(1, selectedItem);
 
             // Execute the query and process the results
             ResultSet rs = preparedStatement.executeQuery();
             while (rs.next()) {
-                if(rs.getString(3)==null || rs.getString(4)==null || rs.getString(5)==null){
-                    x = new Score(rs.getString(1), rs.getString(6),rs.getString(2), 0,  0, 0);
-                } else 
-                x = new Score(rs.getString(1), rs.getString(6),rs.getString(2), Float.parseFloat(rs.getString(3)),  Float.parseFloat(rs.getString(4)), Float.parseFloat(rs.getString(5)));
+                if (rs.getString(3) == null || rs.getString(4) == null || rs.getString(5) == null) {
+                    x = new Score(rs.getString(1), rs.getString(6), rs.getString(2), 0, 0, 0);
+                } else {
+                    x = new Score(rs.getString(1), rs.getString(6), rs.getString(2), Float.parseFloat(rs.getString(3)), Float.parseFloat(rs.getString(4)), Float.parseFloat(rs.getString(5)));
+                }
                 list.add(x);
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        
+
         for (Score x : list) {
-            model.addRow(new Object[]{x.getMsv(), x.getHoTen(), x.getDiemChuyenCan(), x.getDiemGk(), x.getDiemThi(),x.getDiemTongKet()});
+            model.addRow(new Object[]{x.getMsv(), x.getHoTen(), x.getDiemChuyenCan(), x.getDiemGk(), x.getDiemThi(), x.getDiemTongKet()});
         }
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -346,24 +348,23 @@ public class ScoreManagement extends javax.swing.JPanel {
 
     private void EditObActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EditObActionPerformed
         // TODO add your handling code here:
-         String selectedItem = (String) jComboBox1.getSelectedItem();
+        String selectedItem = (String) jComboBox1.getSelectedItem();
         HandleScore handle = new HandleScore();
-        if(this.textDiemThi.getText().trim().isEmpty() || this.textDiemGK.getText().isEmpty() || this.textDiemCC.getText().isEmpty()){
+        if (this.textDiemThi.getText().trim().isEmpty() || this.textDiemGK.getText().isEmpty() || this.textDiemCC.getText().isEmpty()) {
             JOptionPane.showMessageDialog(null, "Dữ liệu không được để trống");
             return;
         }
         float diemThi = Float.parseFloat(this.textDiemThi.getText());
         float diemGk = Float.parseFloat(this.textDiemGK.getText());
         float diemCC = Float.parseFloat(this.textDiemCC.getText());
-        
-        if(diemThi < 0 || diemThi > 10 || diemCC <0 || diemCC >10 ||diemGk<0 || diemGk>10)
-        {
+
+        if (diemThi < 0 || diemThi > 10 || diemCC < 0 || diemCC > 10 || diemGk < 0 || diemGk > 10) {
             JOptionPane.showMessageDialog(null, "Dữ liệu không hợp lệ");
             return;
         }
         String Msv = this.textMsv.getText();
         try {
-            if(handle.updateScoreDatabse(diemCC,diemGk,diemThi, Msv,selectedItem)){
+            if (handle.updateScoreDatabse(diemCC, diemGk, diemThi, Msv, selectedItem)) {
                 JOptionPane.showMessageDialog(null, "Cập nhật thành công!!!");
             } else {
                 JOptionPane.showMessageDialog(null, "Cập nhật không thành công!!!");
@@ -377,23 +378,23 @@ public class ScoreManagement extends javax.swing.JPanel {
             Logger.getLogger(ScoreManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_EditObActionPerformed
-     private void ShowComboBox() throws SQLException{
+    private void ShowComboBox() throws SQLException {
         String selectedItem = (String) jComboBox1.getSelectedItem();
 
-        String sql = "select M.TenMon from Diem as D join MonHoc as M on M.MaMon = D.MaMon group by M.TenMon\n" +
-"									";
-        
+        String sql = "select M.TenMon from Diem as D join MonHoc as M on M.MaMon = D.MaMon group by M.TenMon\n"
+                + "									";
+
         Connection conn = Connect.getConnection();
         jComboBox1.removeAllItems();
         Statement statement = conn.createStatement();
         ResultSet rs = statement.executeQuery(sql);
-         while (rs.next()) {
-                // Process the result set as needed
-                jComboBox1.addItem(rs.getString(1));
+        while (rs.next()) {
+            // Process the result set as needed
+            jComboBox1.addItem(rs.getString(1));
 
-            }
+        }
     }
-    
+
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         try {
             // TODO add your handling code here:

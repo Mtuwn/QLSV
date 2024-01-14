@@ -394,7 +394,7 @@ public class TeacherManagement extends javax.swing.JPanel {
             }
         });
 
-        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel1.setBackground(java.awt.Color.white);
         jPanel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         headerLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N

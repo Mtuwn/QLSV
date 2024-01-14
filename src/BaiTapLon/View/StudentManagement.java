@@ -43,10 +43,10 @@ public class StudentManagement extends javax.swing.JPanel {
 
     public StudentManagement() throws SQLException {
         initComponents();
-        
+
         textID.setVisible(false);
-            labelMsv.setVisible(false);
-            viewTable("ATTT", "AT18B");
+        labelMsv.setVisible(false);
+        viewTable("ATTT", "AT18B");
         showCombobox("ATTT");
 
     }
@@ -74,7 +74,7 @@ public class StudentManagement extends javax.swing.JPanel {
         if (MsvCu.trim().isEmpty()) {
             String regex = "[A-Z]{2}\\d{6}";
             newMsv = this.textID.getText().trim();
-            if(!newMsv.matches(regex)){
+            if (!newMsv.matches(regex)) {
                 JOptionPane.showMessageDialog(null, "Mã không đúng định dạng!!!\nĐịnh dạng đúng [A-Z]{2}\\d{6}");
                 return null;
             }
@@ -86,7 +86,6 @@ public class StudentManagement extends javax.swing.JPanel {
 
         }
         return newMsv;
-
 
     }
 
@@ -115,7 +114,8 @@ public class StudentManagement extends javax.swing.JPanel {
         model.setNumRows(0);
         list.removeAll(list);
 
-        String sql = "select S.Msv, S.HoTen, S.NgaySinh, S.GioiTinh, S.SDT, S.DiaChi, S.Email, S.Lop, L.Khoa from SinhVien as S join Lop L on L.TenLop = S.Lop where L.Khoa = ? and Lop = ? order by Msv";
+        String sql = "select S.Msv, S.HoTen, S.NgaySinh, S.GioiTinh, S.SDT, S.DiaChi, S.Email, S.Lop, L.Khoa from SinhVien as "
+                + "S join Lop L on L.TenLop = S.Lop where L.Khoa = ? and Lop = ? order by Msv";
 
         Connection conn = Connect.getConnection();
 
@@ -130,7 +130,8 @@ public class StudentManagement extends javax.swing.JPanel {
                 // Process the result set as needed
                 Boolean gender = Integer.parseInt(rs.getString(4)) == 1 ? true : false;
                 String gioiTinh = Integer.parseInt(rs.getString(4)) == 1 ? "Nam" : "Nữ";
-                x = new Student(rs.getString(1), rs.getString(2), rs.getString(3), gender, rs.getString(5), rs.getString(6), rs.getString(7), rs.getString(8), rs.getString(9));
+                x = new Student(rs.getString(1), rs.getString(2), rs.getString(3), gender, rs.getString(5), rs.getString(6),
+                        rs.getString(7), rs.getString(8), rs.getString(9));
                 list.add(x);
             }
         } catch (SQLException e) {
@@ -141,13 +142,13 @@ public class StudentManagement extends javax.swing.JPanel {
             model.addRow(new Object[]{x.getMsv(), x.getHoTen(), x.isGioiTinh(), x.getEmail()});
         }
         if ((this.Table1.getRowCount() == 0)) {
-                textID.setVisible(true);
-                labelMsv.setVisible(true);
-            } else if((this.Table1.getRowCount() == 0) && !edit &&delete){
-                 textID.setVisible(false);
-                labelMsv.setVisible(false);
-            }
-       
+            textID.setVisible(true);
+            labelMsv.setVisible(true);
+        } else if ((this.Table1.getRowCount() == 0) && !edit && delete) {
+            textID.setVisible(false);
+            labelMsv.setVisible(false);
+        }
+
     }
 
     /**
@@ -290,7 +291,9 @@ public class StudentManagement extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(130, 130, 130)
+                        .addGap(52, 52, 52)
+                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
                         .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(labelMsv, javax.swing.GroupLayout.PREFERRED_SIZE, 73, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -298,17 +301,14 @@ public class StudentManagement extends javax.swing.JPanel {
                         .addComponent(textID, javax.swing.GroupLayout.PREFERRED_SIZE, 176, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jLabel23)
-                                .addComponent(jLabel19)
-                                .addComponent(jLabel24)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                                    .addGap(19, 19, 19)
-                                    .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel23)
+                            .addComponent(jLabel19)
+                            .addComponent(jLabel24)
                             .addComponent(jLabel20)
                             .addComponent(jLabel26)
                             .addComponent(jLabel21)
                             .addComponent(jLabel18))
+                        .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGap(11, 11, 11)
@@ -400,7 +400,7 @@ public class StudentManagement extends javax.swing.JPanel {
             }
         });
 
-        jPanel1.setBackground(new java.awt.Color(204, 204, 204));
+        jPanel1.setBackground(java.awt.Color.white);
         jPanel1.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         headerLabel.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
@@ -556,23 +556,25 @@ public class StudentManagement extends javax.swing.JPanel {
                 textID.setVisible(true);
                 labelMsv.setVisible(true);
             } else {
-                 textID.setVisible(false);
+                textID.setVisible(false);
                 labelMsv.setVisible(false);
             }
 
             headerLabel.setText("Thêm sinh viên");
         } else {
-             x = inputInf();
+            x = inputInf();
             if (x == null) {
                 return;
             }
 
             x.setMsv(handleMsv());
-            if(x.getMsv().trim().isEmpty()) return;
+            if (x.getMsv().trim().isEmpty()) {
+                return;
+            }
             try {
-                if( handle.addStudentDatabase(x))
+                if (handle.addStudentDatabase(x)) {
                     JOptionPane.showMessageDialog(null, "Thêm thành công!!!");
-                else{
+                } else {
                     JOptionPane.showMessageDialog(null, "Sinh viên đã tồn tại!!!");
                     return;
                 }
@@ -645,12 +647,12 @@ public class StudentManagement extends javax.swing.JPanel {
             String x = this.textID.getText();
             HandleStudent handle = new HandleStudent();
             try {
-                if(!handle.deleteStudentDatabase(x)){
+                if (!handle.deleteStudentDatabase(x)) {
                     JOptionPane.showMessageDialog(null, "Không tìm thấy sinh viên");
                 } else {
-                   JOptionPane.showMessageDialog(null, "Xóa thành công");
+                    JOptionPane.showMessageDialog(null, "Xóa thành công");
                 }
-                
+
             } catch (SQLException ex) {
                 Logger.getLogger(StudentManagement.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -689,7 +691,7 @@ public class StudentManagement extends javax.swing.JPanel {
     }
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         // TODO add your handling code here:
-       
+
         String selectedItem1 = (String) jComboBox1.getSelectedItem();
         String selectedItem3 = (String) jComboBox3.getSelectedItem();
 
@@ -698,16 +700,16 @@ public class StudentManagement extends javax.swing.JPanel {
         } catch (SQLException ex) {
             Logger.getLogger(StudentManagement.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         showCombobox(selectedItem1);
-        
-            if (this.Table1.getRowCount() == 0) {
-                textID.setVisible(true);
-                labelMsv.setVisible(true);
-            } else {
-                 textID.setVisible(false);
-                labelMsv.setVisible(false);
-            }
+
+        if (this.Table1.getRowCount() == 0) {
+            textID.setVisible(true);
+            labelMsv.setVisible(true);
+        } else {
+            textID.setVisible(false);
+            labelMsv.setVisible(false);
+        }
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed

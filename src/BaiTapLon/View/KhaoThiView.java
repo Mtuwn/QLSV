@@ -6,16 +6,14 @@
 package BaiTapLon.View;
 
 import Controller.ActiveUser;
-import java.awt.Color;
+
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.BorderFactory;
+
 import javax.swing.JPanel;
-import javax.swing.border.Border;
 
 /**
  *
@@ -26,32 +24,29 @@ public class KhaoThiView extends javax.swing.JFrame {
     /**
      * Creates new form KhaoThiView
      */
-    
     private JPanel chillPanel;
+
     public KhaoThiView() {
-           
+
         initComponents();
-         setLocationRelativeTo(null);
-            
-         
-         LocalDateTime ngayHienTai = LocalDateTime.now();
-          // Định dạng ngày giờ
+        setLocationRelativeTo(null);
+
+        LocalDateTime ngayHienTai = LocalDateTime.now();
+        // Định dạng ngày giờ
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-YYYY");
 
         // Chuyển đối thành chuỗi
         String chuoiNgayHienTai = ngayHienTai.format(formatter);
 
-         this.textToDay.setText(chuoiNgayHienTai);
-         String name = ActiveUser.hoTen;
-         khaothiUserName.setText(name);
+        this.textToDay.setText(chuoiNgayHienTai);
+        String name = ActiveUser.hoTen;
+        khaothiUserName.setText(name);
 
-         
     }
-    
+
 //    private void getNameAdmin(){
 //        
 //    }
-
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -119,7 +114,7 @@ public class KhaoThiView extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jPanel11.setBackground(new java.awt.Color(204, 204, 255));
+        jPanel11.setBackground(new java.awt.Color(243, 241, 241));
         jPanel11.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         jPanel11.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
@@ -127,10 +122,11 @@ public class KhaoThiView extends javax.swing.JFrame {
             }
         });
 
-        jPanel12.setBackground(new java.awt.Color(204, 255, 204));
-        jPanel12.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jPanel12.setBackground(java.awt.Color.white);
+        jPanel12.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         jLabel13.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(0, 0, 0));
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel13.setText("MENU");
 
@@ -144,6 +140,16 @@ public class KhaoThiView extends javax.swing.JFrame {
 
         btn_MonHoc.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
         btn_MonHoc.setText("Lớp theo môn học");
+        btn_MonHoc.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                btn_MonHocMouseMoved(evt);
+            }
+        });
+        btn_MonHoc.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btn_MonHocMouseClicked(evt);
+            }
+        });
         btn_MonHoc.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_MonHocActionPerformed(evt);
@@ -205,20 +211,20 @@ public class KhaoThiView extends javax.swing.JFrame {
                 .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btn_SinhVien)
-                .addGap(40, 40, 40)
+                .addGap(48, 48, 48)
                 .addComponent(btn_XemGiaoVien)
-                .addGap(39, 39, 39)
+                .addGap(50, 50, 50)
                 .addComponent(jButton4)
-                .addGap(43, 43, 43)
+                .addGap(55, 55, 55)
                 .addComponent(jButton1)
-                .addGap(45, 45, 45)
+                .addGap(53, 53, 53)
                 .addComponent(jButton3)
-                .addGap(45, 45, 45)
+                .addGap(44, 44, 44)
                 .addComponent(btn_MonHoc)
-                .addContainerGap(59, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel1.setBackground(new java.awt.Color(204, 255, 204));
+        jPanel1.setBackground(java.awt.Color.white);
         jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         jLabel3.setBackground(new java.awt.Color(204, 255, 204));
@@ -260,7 +266,7 @@ public class KhaoThiView extends javax.swing.JFrame {
                 .addGap(53, 53, 53))
         );
 
-        jPanel6.setBackground(new java.awt.Color(204, 255, 204));
+        jPanel6.setBackground(java.awt.Color.white);
         jPanel6.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
@@ -268,6 +274,7 @@ public class KhaoThiView extends javax.swing.JFrame {
         jLabel1.setText("User : ");
 
         khaothiUserName.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        khaothiUserName.setForeground(new java.awt.Color(0, 0, 0));
         khaothiUserName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         khaothiUserName.setText("ABC");
 
@@ -276,6 +283,7 @@ public class KhaoThiView extends javax.swing.JFrame {
         jLabel2.setText("Today :");
 
         textToDay.setFont(new java.awt.Font("Tahoma", 1, 18)); // NOI18N
+        textToDay.setForeground(new java.awt.Color(0, 0, 0));
         textToDay.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         textToDay.setText("11/11/2023");
 
@@ -335,35 +343,36 @@ public class KhaoThiView extends javax.swing.JFrame {
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 48, Short.MAX_VALUE)
+                .addGap(18, 34, Short.MAX_VALUE)
                 .addComponent(mainTab, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(647, 647, 647))
             .addGroup(jPanel11Layout.createSequentialGroup()
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(27, 27, 27)
-                .addComponent(jPanel12, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addComponent(jPanel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jPanel11, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(14, 14, 14)
+                .addComponent(jPanel11, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-    private void show(JPanel x){
+    private void show(JPanel x) {
         x.setVisible(false);
         mainTab.removeAll();
         mainTab.add(chillPanel);
@@ -380,13 +389,15 @@ public class KhaoThiView extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_XemGiaoVienActionPerformed
 
     private void btn_MonHocActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_MonHocActionPerformed
+       
+       
         try {
             // TODO add your handling code here:
             chillPanel = new ClassSubjectManagement();
         } catch (SQLException ex) {
             Logger.getLogger(KhaoThiView.class.getName()).log(Level.SEVERE, null, ex);
         }
-        show(chillPanel);  
+        show(chillPanel);
     }//GEN-LAST:event_btn_MonHocActionPerformed
 
     private void btn_SinhVienActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_SinhVienActionPerformed
@@ -396,8 +407,8 @@ public class KhaoThiView extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(KhaoThiView.class.getName()).log(Level.SEVERE, null, ex);
         }
-        show(chillPanel);  
-        
+        show(chillPanel);
+
     }//GEN-LAST:event_btn_SinhVienActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
@@ -438,8 +449,15 @@ public class KhaoThiView extends javax.swing.JFrame {
     private void jPanel11PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jPanel11PropertyChange
         // TODO add your handling code here:
     }//GEN-LAST:event_jPanel11PropertyChange
-    
- 
+
+    private void btn_MonHocMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_MonHocMouseMoved
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_MonHocMouseMoved
+
+    private void btn_MonHocMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btn_MonHocMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btn_MonHocMouseClicked
+
     public static void main(String args[]) {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">

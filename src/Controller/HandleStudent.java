@@ -55,7 +55,8 @@ public class HandleStudent {
     }
 
     public Boolean updateStudentDatabase(Student x) throws SQLException {
-        String sql = "update SinhVien set Hoten=?,NgaySinh=?,GioiTinh=?,SDT=?,DiaChi=?,Email=?,Lop=?,passwd=? where Msv = ?";
+        String sql = "update SinhVien set Hoten=?,NgaySinh=?,GioiTinh=?,SDT=?,DiaChi=?,Email=?,Lop=?"
+                + ",passwd=? where Msv = ?";
         int gioiTinh = (x.isGioiTinh().equals("Nam")) ? 1 : 0;
 
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
@@ -81,7 +82,8 @@ public class HandleStudent {
     }
 
     public Boolean deleteStudentDatabase(String x) throws SQLException {
-        String sql = "delete from Diem where Msv = ?  ;delete from LopTheoMon where Msv = ?  ;delete from SinhVien where Msv = ?  ;";
+        String sql = "delete from Diem where Msv = ?  "
+                + ";delete from LopTheoMon where Msv = ?  ;delete from SinhVien where Msv = ?  ;";
 
         try (PreparedStatement preparedStatement = conn.prepareStatement(sql)) {
             preparedStatement.setString(1, x);
